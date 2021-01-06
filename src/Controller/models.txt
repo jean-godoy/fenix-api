@@ -1,0 +1,28 @@
+  // var_dump($array["body"]["table"]["tr"][0]["td"][6]["p"]);
+        // var_dump($array["body"]["table"]["tr"][8]);
+        // foreach($array['NFe']["infNFe"] as $item)
+        // {   
+        //     foreach($item as $key)
+        //     {
+        //         var_dump($key->xLgr);
+        //     }
+
+        // }
+
+        // echo '<pre>';
+        // print_r($array);
+        // echo $array['NFe']['infNFe'];
+        // return $this->json(var_dump($array["NFe"]["infNFe"]["@attributes"]["Id"]));
+
+        // foreach($array["@attributes"] as $item)
+        // {
+        //    echo "item - ".$item;
+        // }
+
+        // echo "possivel op: ".$array["body"]["table"]["tr"][0]["td"][6]["p"];
+        // var_dump($array["body"]["table"]["tr"][0]["td"][2]);
+
+        // array vazio br, ou data ou op $array["body"]["table"]["tr"][0]["td"][2]["p"]
+        // $array["body"]["table"]["tr"][0]["td"][1]["p"];
+
+        // var_dump($array["body"]["table"]["tr"][0]["td"][1]["p"]);

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\GradeRomaneioRepository;
+use App\Repository\SequenciaGradesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=GradeRomaneioRepository::class)
+ * @ORM\Entity(repositoryClass=SequenciaGradesRepository::class)
  */
-class GradeRomaneio
+class SequenciaGrades
 {
     /**
      * @ORM\Id
@@ -23,7 +23,7 @@ class GradeRomaneio
     private $op;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=10)
      */
     private $grade;
 
@@ -42,6 +42,16 @@ class GradeRomaneio
      */
     private $updated_at;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deleted_at;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $num_nfe;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,12 +69,12 @@ class GradeRomaneio
         return $this;
     }
 
-    public function getGrade(): ?int
+    public function getGrade(): ?string
     {
         return $this->grade;
     }
 
-    public function setGrade(int $grade): self
+    public function setGrade(string $grade): self
     {
         $this->grade = $grade;
 
@@ -103,6 +113,30 @@ class GradeRomaneio
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deleted_at;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deleted_at): self
+    {
+        $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    public function getNumNfe(): ?int
+    {
+        return $this->num_nfe;
+    }
+
+    public function setNumNfe(int $num_nfe): self
+    {
+        $this->num_nfe = $num_nfe;
 
         return $this;
     }

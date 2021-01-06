@@ -10,20 +10,21 @@ use App\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
+use App\Util\Traits\ResponseTrait;
+use App\Service\AuthService;
+
 /**
  * @Route("/auth", name="auth_")
  */
 class AuthController extends AbstractController
 {
-    /**
-     * @Route("/auth", name="auth")
-     */
-    public function index(): Response
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/AuthController.php',
-        ]);
+    use ResponseTrait;
+    private $authService;
+
+    public function __construct(
+        AuthService      $authService
+    ) {
+        $this->authService  = $authService;
     }
 
     /**
@@ -46,8 +47,7 @@ class AuthController extends AbstractController
 
         $stmt->execute();
 
-        if($stmt->rowCount() > 0)
-        {
+        if ($stmt->rowCount() > 0) {
             $user = $stmt->fetch();
         }
 
@@ -58,5 +58,72 @@ class AuthController extends AbstractController
         return $this->json(
             $user
         );
+    }
+
+    /**
+     * @Route("/login", name="login", methods={"POST"})
+     */
+    public function login()
+    {
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $email = $data['user_email'] ?? null;
+        if($email === null || $email === ""){
+            return $this->responseNotOK("Campo obrigatorio: "."login", false);
+        }
+        $password = $data['user_pass'] ?? null;
+        if($password == null || $password === ""){
+            return $this->responseNotOK("Campo obrigatorio: "."password", false);
+        }
+
+        $response = $this->authService->login($email, $password);
+
+        if($response === null || $response === ""){
+            return $this->responseNotOK("Usuario ou Senha não correspondem!", false);
+        }
+
+        return $this->json($response, 200, [], $context);
+    }
+
+    /**
+     * @Route("/login-faccao", name="loginFaccao", methods={"POST"})
+     */
+    public function loginFaccao()
+    {
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        
+        $email = $data['user_email'] ?? null;
+        if($email === null || $email === ""){
+            return $this->responseNotOK("Campo obrigatorio: "."email", false);
+        }
+        $password = $data['user_pass'] ?? null;
+        if($password == null || $password === ""){
+            return $this->responseNotOK("Campo obrigatorio: "."password", false);
+        }
+
+        $response = $this->authService->login($email, $password);
+
+        if($response === null || $response === ""){
+            return $this->responseNotOK("Usuario ou Senha não correspondem!", false);
+        }
+
+        return $this->json($response, 200, [], $context);
+    }
+
+    /**
+     * @Route("/validate", name="validate", methods={"POST"})
+     */
+    public function validate(Request $request)
+    {
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $token = $request->headers->get('Authorization');
+        $part = explode(" ", $token);
+        $response = $this->authService->validate($part[1]);
+        
+        return $this->json($response, 200, [], $context);
     }
 }

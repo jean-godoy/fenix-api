@@ -57,6 +57,16 @@ class Faccoes
      */
     private $bank;
 
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $faccao_code;
+
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $user_code;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,4 +167,29 @@ class Faccoes
 
         return $this;
     }
+
+    public function getFaccaoCode(): ?string
+    {
+        return $this->faccao_code;
+    }
+
+    public function setFaccaoCode(string $faccao_code): self
+    {
+        $this->faccao_code = $faccao_code;
+
+        return $this;
+    }
+
+    public function getUserCode(): ?string
+    {
+        return $this->user_code;
+    }
+
+    public function setUserCode(string $user_code): self
+    {
+        $this->user_code = $user_code;
+
+        return $this;
+    }
+
 }

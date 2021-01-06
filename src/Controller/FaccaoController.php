@@ -9,12 +9,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Entity\Faccoes;
+use App\Entity\Users;
+
+use App\Util\Traits\ResponseTrait;
 
 /**
  * @Route("/faccoes", name="faccoes_", )
  */
 class FaccaoController extends AbstractController
 {
+
+    use ResponseTrait;
     /**
      * @Route("/", name="faccao", methods={"GET"})
      */
@@ -44,8 +49,29 @@ class FaccaoController extends AbstractController
      */
     public function create()
     {
+        $user_code = md5(uniqid(rand() . "", true));
+        $faccao_code = md5(uniqid(rand() . "", true));
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
+
+        if($data === null || $data === "")
+        {
+            return $this->responseNotOK("Obrigatorio preencher todos os campos", false);
+        }
+
+        $doctrine = $this->getDoctrine()->getManager();
+
+        $user = new Users();
+        $user->setUserName($data['user_name']);
+        $user->setUserEmail($data['user_email']);
+        $user->setUserPass($data['user_pass']);
+        $user->setRoles(3);
+        $user->setUserCode($user_code);
+        $user->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+        $user->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+        $doctrine->persist($user);
+        $doctrine->flush();
 
         $faccao = new Faccoes();
         $faccao->setFaccaoName($data['faccao_name']);
@@ -54,10 +80,12 @@ class FaccaoController extends AbstractController
         $faccao->setCpf($data['cpf']);
         $faccao->setBank($data['bank']);
         $faccao->setEmployees(intval($data['employees']));
+        $faccao->setUserCode($user_code);
+        $faccao->setFaccaoCode($faccao_code);
         $faccao->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
         $faccao->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
-        $doctrine = $this->getDoctrine()->getManager();
+    
         $doctrine->persist($faccao);
         $doctrine->flush();
 

@@ -49,11 +49,6 @@ class Users
     private $user_pass;
 
     /**
-     * @ORM\Column(type="string", length=100)
-     */
-    private $token;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -62,6 +57,22 @@ class Users
      * @ORM\Column(type="datetime")
      */
     private $updated_at;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $roles;
+
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $user_code;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deleted_at;
+
 
     public function getId(): ?int
     {
@@ -104,18 +115,6 @@ class Users
         return $this;
     }
 
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(string $token): self
-    {
-        $this->token = $token;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
@@ -139,4 +138,50 @@ class Users
 
         return $this;
     }
+
+    /**
+     * Get the value of roles
+     */ 
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set the value of roles
+     *
+     * @return  self
+     */ 
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getUserCode(): ?string
+    {
+        return $this->user_code;
+    }
+
+    public function setUserCode(string $user_code): self
+    {
+        $this->user_code = $user_code;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeInterface
+    {
+        return $this->deleted_at;
+    }
+
+    public function setDeletedAt(?\DateTimeInterface $deleted_at): self
+    {
+        $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    
 }
