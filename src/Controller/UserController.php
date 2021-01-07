@@ -42,7 +42,8 @@ class UserController extends AbstractController
         $user->setUserName($data['user_name']);
         $user->setUserEmail(($data['user_email']));
         $user->setUserPass($data['user_pass']);
-        $user->setToken('12345abc');
+        $user->setRoles(1);
+        $user->setUserCode(md5(uniqid(rand() . "", true)));
         $user->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
         $user->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
