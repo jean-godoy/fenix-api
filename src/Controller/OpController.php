@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,68 +18,47 @@ use App\Repository\SequenciaOperacionalRepository;
 use App\Repository\RomaneioFooterRepository;
 
 use App\Util\Traits\ResponseTrait;
-
+use App\Service\OpService;
 
 /**
- * @Route("/pdf", name="pdf_")
+ * @Route("/op", name="op_")
  */
-class PdfController extends AbstractController
+class OpController extends AbstractController
 {
     use ResponseTrait;
-    private $romaneioRepository;
-    private $gradeRepository;
-    private $sequenciaRepository;
-    private $footerReposytory;
+    private $opService;
 
-    public function __construct(
-        RomaneioDescricaoRepository     $romaneioRepository,
-        SequenciaGradesRepository       $gradeRepository,
-        SequenciaOperacionalRepository  $sequenciaRepository,
-        RomaneioFooterRepository        $romaneioFooterRepository
-    ) {
-        $this->romaneioRepository       = $romaneioRepository;
-        $this->gradeRepository          = $gradeRepository;
-        $this->sequenciaRepository      = $sequenciaRepository;
-        $this->footerReposytory         = $romaneioFooterRepository;
+    public function __construct(OpService $opService)
+    {
+        $this->opService = $opService;
     }
 
     /**
-     * @Route("/create", name="create", methods={"POST"})
+     * @Route("/", name="op", methods={"GET"})
      */
-    public function create(Request $request)
+    public function index(): Response
     {
-        // $filePDF = file_get_contents($_FILES['op_file']['tmp_name']);
-        $file = $_FILES['pdf']['tmp_name'];
-        // $extract = new DOMDocument();
-        // $extract->loadHTML($file);
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $reponse = $this->opService->getNfeNumber();
 
-        $ordem_producao = $request->get('op');
-
-        $xml = simplexml_load_string(file_get_contents($file));
-        $json = json_encode($xml);
-        $array = json_decode($json, TRUE);
-        
-        // var_dump($array["NFe"]["infNFe"]["@attributes"]["Id"]);
-
-        echo "Num NF-e: ".$num_nfe = $array["NFe"]["infNFe"]["@attributes"]["Id"];
-        echo "\n";
-        echo "Chave: ".$nfe_key = $array["NFe"]["infNFe"]["ide"]["nNF"];
+        if($reponse !== null || $reponse !== "")
+        {
+            return $this->json($reponse, 200, [], $context);
+        }
 
         return $this->json([
-            "data" => "footer cadastrado com sucesso"
+            'data' => 'Nenhuma NF-e Cadastrada!',
         ]);
     }
 
     /**
-     * @Route("/new", name="new", methods={"POST"})
+     * @Route("/upload-op", name="uploadOp", methods={"POST"})
      */
-    public function new(Request $request)
+    public function uploadOp(Request $request)
     {
         $doctrine = $this->getDoctrine()->getManager();
-        $file = $_FILES['pdf']['tmp_name'];
+        $file = $_FILES['op_file']['tmp_name'];
         $reference_code = md5(uniqid(rand() . "", true));
-        // $extract = new DOMDocument();
-        // $extract->loadHTML($file);
 
         $data_now = new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'));
 
@@ -90,7 +67,7 @@ class PdfController extends AbstractController
         $array = json_decode($json, TRUE);
 
         //ordem de producao
-        $ordem_producao = $request->get('op');
+        $ordem_producao = $request->get('num_op');
         if ($ordem_producao === null || $ordem_producao === "") {
             return $this->responseNotOK("Campo Obrigatorio, ordem_produca", false);
         }
