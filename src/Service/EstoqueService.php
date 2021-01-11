@@ -8,6 +8,7 @@ use App\Repository\RomaneioDescricaoRepository;
 use App\Repository\SequenciaGradesRepository;
 use App\Repository\SequenciaOperacionalRepository;
 use App\Repository\RomaneioFooterRepository;
+use Laminas\Code\Reflection\FunctionReflection;
 
 /**
  * Class EstoqueService
@@ -41,6 +42,17 @@ use App\Repository\RomaneioFooterRepository;
         $this->gradeRepository      = $SequenciaGradesRepository;  
         $this->sequenciaRepository  = $sequenciaOperacionalRepository;
         $this->footerRepository     = $romaneioFooterRepository;
+    }
+
+    public function show()
+    {
+        $response = $this->romaneioRepository->findAll();
+
+        if($response !== null | $response !== ""){
+            return $response;
+        } else {
+            return [];
+        }
     }
 
     public function checkOp($op)

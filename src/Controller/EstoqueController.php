@@ -38,6 +38,22 @@ class EstoqueController extends AbstractController
     }
 
     /**
+     * @Route("/show", name="show", methods={"GET"})
+     */
+    public function show()
+    {   
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $response = $this->estoqueService->show();
+
+        if($response === null || $response === ""){
+            return $this->responseNotOK("Nenhum campo cadastrado", false);
+        }
+
+        return $this->json($response, 200, [], $context);
+
+    }
+
+    /**
      * @Route("/get-id/{op}", name="estoque", methods={"GET"})
      */
     public function estoque($op): Response
