@@ -52,6 +52,11 @@ class SequenciaGrades
      */
     private $num_nfe;
 
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $grade_code;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +142,18 @@ class SequenciaGrades
     public function setNumNfe(int $num_nfe): self
     {
         $this->num_nfe = $num_nfe;
+
+        return $this;
+    }
+
+    public function getGradeCode(): ?string
+    {
+        return $this->grade_code;
+    }
+
+    public function setGradeCode(string $grade_code): self
+    {
+        $this->grade_code = $grade_code;
 
         return $this;
     }

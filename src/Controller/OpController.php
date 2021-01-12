@@ -41,8 +41,7 @@ class OpController extends AbstractController
         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
         $reponse = $this->opService->getNfeNumber();
 
-        if($reponse !== null || $reponse !== "")
-        {
+        if ($reponse !== null || $reponse !== "") {
             return $this->json($reponse, 200, [], $context);
         }
 
@@ -58,7 +57,6 @@ class OpController extends AbstractController
     {
         $doctrine = $this->getDoctrine()->getManager();
         $file = $_FILES['op_file']['tmp_name'];
-        $reference_code = md5(uniqid(rand() . "", true));
 
         $data_now = new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'));
 
@@ -128,6 +126,8 @@ class OpController extends AbstractController
             $grade->setCreatedAt($data_now);
             $grade->setUpdatedAt($data_now);
             $grade->setNumNfe($num_nfe);
+            //gera o grade code
+            $grade->setGradeCode(md5(uniqid(rand() . "", true)));
             //gera quantidades
             $quantidade = $quantidade + $array["body"]["table"]["tr"][6]["td"][$i]["p"];
 
