@@ -18,9 +18,9 @@ class FaccaoRomaneio
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=32)
      */
-    private $num_controle;
+    private $faccao_code;
 
     /**
      * @ORM\Column(type="integer")
@@ -28,9 +28,14 @@ class FaccaoRomaneio
     private $ordem_producao;
 
     /**
-     * @ORM\Column(type="string", length=32)
+     * @ORM\Column(type="text")
      */
-    private $faccao_code;
+    private $grade;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $seguencia;
 
     /**
      * @ORM\Column(type="datetime")
@@ -47,19 +52,24 @@ class FaccaoRomaneio
      */
     private $deleted_at;
 
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $romaneio_code;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNumControle(): ?int
+    public function getFaccaoCode(): ?string
     {
-        return $this->num_controle;
+        return $this->faccao_code;
     }
 
-    public function setNumControle(int $num_controle): self
+    public function setFaccaoCode(string $faccao_code): self
     {
-        $this->num_controle = $num_controle;
+        $this->faccao_code = $faccao_code;
 
         return $this;
     }
@@ -76,14 +86,26 @@ class FaccaoRomaneio
         return $this;
     }
 
-    public function getFaccaoCode(): ?string
+    public function getGrade(): ?string
     {
-        return $this->faccao_code;
+        return $this->grade;
     }
 
-    public function setFaccaoCode(string $faccao_code): self
+    public function setGrade(string $grade): self
     {
-        $this->faccao_code = $faccao_code;
+        $this->grade = $grade;
+
+        return $this;
+    }
+
+    public function getSeguencia(): ?string
+    {
+        return $this->seguencia;
+    }
+
+    public function setSeguencia(string $seguencia): self
+    {
+        $this->seguencia = $seguencia;
 
         return $this;
     }
@@ -120,6 +142,26 @@ class FaccaoRomaneio
     public function setDeletedAt(?\DateTimeInterface $deleted_at): self
     {
         $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of romaneio_code
+     */ 
+    public function getRomaneio_code()
+    {
+        return $this->romaneio_code;
+    }
+
+    /**
+     * Set the value of romaneio_code
+     *
+     * @return  self
+     */ 
+    public function setRomaneio_code($romaneio_code)
+    {
+        $this->romaneio_code = $romaneio_code;
 
         return $this;
     }

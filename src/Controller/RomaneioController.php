@@ -8,13 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Entity\Checking;
-use App\Entity\GradeRomaneio;
 use App\Entity\Faccoes;
 
 use App\Service\RomaneioService;
 use App\Service\EstoqueService;
 use App\Util\Traits\ResponseTrait;
+
+
 
 /**
  * @Route("/romaneios", name="romaneio_")
@@ -26,8 +26,8 @@ class RomaneioController extends AbstractController
     private $estoqueService;
     
     public function __construct(
-        RomaneioService             $romaneioService,
-        EstoqueService              $estoqueService
+        RomaneioService                 $romaneioService,
+        EstoqueService                  $estoqueService
     )
     {
         $this->romaneioService      = $romaneioService;
@@ -160,4 +160,41 @@ class RomaneioController extends AbstractController
 
         return $this->json($reference_code);
     }
+
+    /**
+     * @Route("/gerar-romaneio", name="gerarRomaneio", methods={"POST"}) 
+     */
+    public function gererRomaneio()
+    {
+        $context['ignored_attributes'] = ['id', 'createdAt', 'deletedAt', 'updatedAt'];
+
+        $json = file_get_contents('php://input');
+        $array = json_decode($json, TRUE );
+
+        $doctrine = $this->getDoctrine()->getManager();
+
+        $response = $this->romaneioService->save($array, $doctrine) ?? null;
+        if($response === null || $response === "")
+        {
+            return $this->responseNotOK("Nenhum dado registrado correspondente!", false);
+        }
+        
+        return $this->json($response, 200, [], $context);
+    }
+
+    /**
+     * @Route("/list", name="list", methods={"GET"})
+     */
+    public function list()
+    {  
+         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $response = $this->romaneioService->list() ?? null;
+        if($response === null || $response === "")
+        {
+            return $this->responseNotOK("Nenhum romaneio cadastrado!", false);
+        }
+
+        return $this->json($response, 200, [], $context);
+    }
+    
 }
