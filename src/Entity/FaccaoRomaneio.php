@@ -57,6 +57,11 @@ class FaccaoRomaneio
      */
     private $romaneio_code;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $faccao_status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -149,7 +154,7 @@ class FaccaoRomaneio
     /**
      * Get the value of romaneio_code
      */ 
-    public function getRomaneio_code()
+    public function getRomaneioCode()
     {
         return $this->romaneio_code;
     }
@@ -159,9 +164,21 @@ class FaccaoRomaneio
      *
      * @return  self
      */ 
-    public function setRomaneio_code($romaneio_code)
+    public function setRomaneioCode($romaneio_code)
     {
         $this->romaneio_code = $romaneio_code;
+
+        return $this;
+    }
+
+    public function getFaccaoStatus(): ?int
+    {
+        return $this->faccao_status;
+    }
+
+    public function setFaccaoStatus(int $faccao_status): self
+    {
+        $this->faccao_status = $faccao_status;
 
         return $this;
     }

@@ -87,6 +87,11 @@ class RomaneioDescricao
      */
     private $num_nfe;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -256,6 +261,18 @@ class RomaneioDescricao
     public function setNumNfe(int $num_nfe): self
     {
         $this->num_nfe = $num_nfe;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

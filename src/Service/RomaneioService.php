@@ -13,7 +13,7 @@ use App\Repository\SequenciaGradesRepository;
  * Class RomaneioDescricao
  * @package App\Entity
  * @author Jean Godoy
- * @link ttps://seidesistemas.com.br
+ * @link https://seidesistemas.com.br
  */
 
 class RomaneioService
@@ -63,9 +63,10 @@ class RomaneioService
         $romaneio->setOrdemProducao($array["ordem_producao"]);
         $romaneio->setGrade(json_encode($array['grade']));
         $romaneio->setSeguencia(json_encode($array['sequencia']));
-        $romaneio->setRomaneio_code(md5(uniqid(rand() . "", true)));
+        $romaneio->setRomaneioCode(md5(uniqid(rand() . "", true)));
         $romaneio->setCreatedAt($data_now);
         $romaneio->setUpdatedAt($data_now);
+        $romaneio->setFaccaoStatus(6);
 
         $this->em->persist($romaneio);
         $this->em->flush();
@@ -82,9 +83,9 @@ class RomaneioService
     {
         $conn = $this->em->getConnection();
         $sql = "SELECT * FROM faccao_romaneio AS faccao
-                LEFT JOIN romaneio_descricao AS romaneio
+                RIGHT JOIN romaneio_descricao AS romaneio
                 On romaneio.ordem_producao = faccao.ordem_producao
-                LEFT JOIN faccoes 
+                RIGHT JOIN faccoes 
                 ON faccoes.faccao_code = faccao.faccao_code
             ";
 

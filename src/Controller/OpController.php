@@ -153,6 +153,7 @@ class OpController extends AbstractController
         $romaneio_descricao->setCreatedAt($data_now);
         $romaneio_descricao->setUpdatedAt($data_now);
         $romaneio_descricao->setNumNfe($num_nfe);
+        $romaneio_descricao->setStatus(5);
 
         $doctrine->persist($romaneio_descricao);
         $doctrine->flush();

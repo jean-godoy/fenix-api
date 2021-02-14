@@ -27,7 +27,7 @@ use App\Repository\CheckingRepository;
 
     public function getNfeNumber()
     {
-        $reponse = $this->checkingRepository->findBy(["status" => 2]);
+        $reponse = $this->checkingRepository->findBy(["status" => 5]);
 
         if($reponse !== null || $reponse !== ""){
             return $reponse;

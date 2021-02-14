@@ -46,7 +46,7 @@ use Laminas\Code\Reflection\FunctionReflection;
 
     public function show()
     {
-        $response = $this->romaneioRepository->findAll();
+        $response = $this->romaneioRepository->findBy(["status" => 5]);
 
         if($response !== null | $response !== ""){
             return $response;
