@@ -31,9 +31,9 @@ class FinalizacaoController extends AbstractController
     }
 
     /**
-     * @Route("/get-all", name="show")
+     * @Route("/get-all", name="getAll", methods={"GET"})
      */
-    public function show(): Response
+    public function getAll(): Response
     {
         $response = $this->finalizacaoService->getAll();
         if($response === false){

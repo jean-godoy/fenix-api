@@ -62,6 +62,11 @@ class FaccaoRomaneio
      */
     private $faccao_status;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $status_updated;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -179,6 +184,18 @@ class FaccaoRomaneio
     public function setFaccaoStatus(int $faccao_status): self
     {
         $this->faccao_status = $faccao_status;
+
+        return $this;
+    }
+
+    public function getStatusUpdated(): ?\DateTimeInterface
+    {
+        return $this->status_updated;
+    }
+
+    public function setStatusUpdated(?\DateTimeInterface $status_updated): self
+    {
+        $this->status_updated = $status_updated;
 
         return $this;
     }

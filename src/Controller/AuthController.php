@@ -98,11 +98,11 @@ class AuthController extends AbstractController
         
         $email = $data['user_email'] ?? null;
         if($email === null || $email === ""){
-            return $this->responseNotOK("Campo obrigatorio: "."email", false);
+            return $this->responseNotOK("Campo obrigatorio: "."user_email", false);
         }
         $password = $data['user_pass'] ?? null;
         if($password == null || $password === ""){
-            return $this->responseNotOK("Campo obrigatorio: "."password", false);
+            return $this->responseNotOK("Campo obrigatorio: "."user_pass", false);
         }
 
         $response = $this->authService->login($email, $password);

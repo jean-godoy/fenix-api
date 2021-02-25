@@ -61,4 +61,11 @@ use Doctrine\ORM\EntityManagerInterface;
             return false;
         }
     }
+
+    public function setStatus()
+    {
+        $response = "";
+
+        
+    }
  }

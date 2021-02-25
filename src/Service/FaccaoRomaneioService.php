@@ -126,6 +126,7 @@ use App\Repository\SequenciaGradesRepository;
         }
 
         $romaneio->setFaccaoStatus($data['status']);
+        $romaneio->setStatusUpdated(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
         $this->em->persist($romaneio);
         $this->em->flush();
 

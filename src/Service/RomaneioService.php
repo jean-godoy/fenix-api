@@ -83,7 +83,7 @@ class RomaneioService
     {
         $conn = $this->em->getConnection();
         $sql = "SELECT * FROM faccao_romaneio AS faccao
-                RIGHT JOIN romaneio_descricao AS romaneio
+                JOIN romaneio_descricao AS romaneio
                 On romaneio.ordem_producao = faccao.ordem_producao
                 RIGHT JOIN faccoes 
                 ON faccoes.faccao_code = faccao.faccao_code

@@ -12,11 +12,6 @@ use App\Entity\SequenciaGrades;
 use App\Entity\SequenciaOperacional;
 use App\Entity\RomaneioFooter;
 
-use App\Repository\RomaneioDescricaoRepository;
-use App\Repository\SequenciaGradesRepository;
-use App\Repository\SequenciaOperacionalRepository;
-use App\Repository\RomaneioFooterRepository;
-
 use App\Util\Traits\ResponseTrait;
 use App\Service\OpService;
 
@@ -109,6 +104,17 @@ class OpController extends AbstractController
         } else {
             $valor = $array["body"]["table"]["tr"][3]["td"][3]["p"];
         }
+        $valor_explode = explode(",", $valor);
+
+        //parte dois do valor, ex: 0000 com 4 digitos, precisa somente os dois pimeiros
+        $valor_parte_dois_array = explode(' ', intval($valor_explode[1]));
+
+        //retorna somente os dois primeiros digitos
+        $valor_parte_dois = $valor_explode[1][0];
+        $valor_parte_dois .= $valor_explode[1][1];
+
+        //retorna o valor ex: 0.00
+        $valor = intval($valor_explode[0]).'.'.intval($valor_parte_dois);
 
         //monta grade e tamanhos
         $quantidade = 0;

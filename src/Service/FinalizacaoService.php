@@ -45,14 +45,21 @@ class FinalizacaoService
      */
     public function getAll()
     {
-        $result = $this->faccaoRepository->findBy(["faccao_status" => 11]) ?? null;
+        // $result = $this->faccaoRepository->findBy(["faccao_status" => 11]) ?? null;
+        $conn = $this->em->getConnection();
 
-        if($result === null || $result === "")
+        $sql = "SELECT * FROM faccao_romaneio WHERE faccao_status >= 11 AND faccao_status <= 15";
+        $sql = $conn->prepare($sql);
+        $sql->execute();
+
+        
+        if($sql->rowCount() > 0)
         {
-            return false;
+            $response = $sql->fetchAll();
+            return $response;
         }
 
-        return $result;
+        return false;
     }
 
     /**
