@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 use App\Entity\Grade;
 use App\Entity\Test;
@@ -69,8 +70,7 @@ class TestController extends AbstractController
 
         $total = null;
 
-        foreach($response as $item)
-        {
+        foreach ($response as $item) {
             // $total =  ($item["tempo_com_int"] * 0.6) * 60;
             $total = $total + $item["tempo_com_int"];
         }
@@ -78,5 +78,25 @@ class TestController extends AbstractController
         var_dump($total);
 
         return $this->json([]);
+    }
+
+    /**
+     * @Route("/pdf-to-jpg", name="pdfConverter", methods={"POST"})
+     */
+    public function pdfConverter(Request $request): Response
+    {
+        $json =  file_get_contents('php://input');
+        $data = json_decode($json, true);
+        $file = $_FILES['pdf_file'];
+        // $pdf = simplexml_load_string(file_get_contents($file));
+
+        $im = new imagick($file);
+        $im->setImageFormat('jpg');
+        header('Content-Type: image/jpeg');
+        echo $im;
+
+        var_dump($file);
+
+        return $this->json($data, 200, [], []);
     }
 }

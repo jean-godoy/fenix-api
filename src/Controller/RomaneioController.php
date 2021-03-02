@@ -13,6 +13,7 @@ use App\Entity\Faccoes;
 use App\Service\RomaneioService;
 use App\Service\EstoqueService;
 use App\Util\Traits\ResponseTrait;
+use App\Service\CheckOpService;
 
 
 
@@ -24,14 +25,17 @@ class RomaneioController extends AbstractController
     use ResponseTrait;
     private $romaneioService;
     private $estoqueService;
+    private $checkOpService;
     
     public function __construct(
-        RomaneioService                 $romaneioService,
-        EstoqueService                  $estoqueService
+        RomaneioService             $romaneioService,
+        EstoqueService              $estoqueService,
+        CheckOpService              $checkOpService
     )
     {
         $this->romaneioService      = $romaneioService;
         $this->estoqueService       = $estoqueService;
+        $this->checkOpService       = $checkOpService;    
     }
 
     /**
@@ -104,6 +108,26 @@ class RomaneioController extends AbstractController
         $faccoes = $this->getDoctrine()->getRepository(Faccoes::class)->findAll();
 
         return $this->json($faccoes);
+    }
+
+    /**
+     * @Route("/check-op/{op}", name="checkOp", methods={"GET"})
+     */
+    public function checkOp($op): Response
+    {
+        if($op === null || $op === "")
+        {
+            return $this->responseNotOK("Campo obrigatório, op", false);
+        }
+
+        $response = $this->checkOpService->checkOp($op);
+
+        if($response === false || $response === "")
+        {
+            return $this->json(false, 401, [], []);
+        }
+
+        return $this->json($response, 200, [], []);
     }
 
     /**

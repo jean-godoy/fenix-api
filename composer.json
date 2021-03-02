@@ -23,8 +23,6 @@
         "symfony/serializer": "5.1.*",
         "symfony/yaml": "5.1.*"
     },
-    "require-dev": {
-    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": {
