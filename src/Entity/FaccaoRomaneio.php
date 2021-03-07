@@ -67,6 +67,11 @@ class FaccaoRomaneio
      */
     private $status_updated;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $projecao_coleta;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -196,6 +201,18 @@ class FaccaoRomaneio
     public function setStatusUpdated(?\DateTimeInterface $status_updated): self
     {
         $this->status_updated = $status_updated;
+
+        return $this;
+    }
+
+    public function getProjecaoColeta(): ?\DateTimeInterface
+    {
+        return $this->projecao_coleta;
+    }
+
+    public function setProjecaoColeta(?\DateTimeInterface $projecao_coleta): self
+    {
+        $this->projecao_coleta = $projecao_coleta;
 
         return $this;
     }

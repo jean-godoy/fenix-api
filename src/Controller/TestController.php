@@ -99,4 +99,14 @@ class TestController extends AbstractController
 
         return $this->json($data, 200, [], []);
     }
+
+    /**
+     * @Route("/get-content", name="getContent", methods={"GET"})
+     */
+    public function getContent()
+    {
+        $url = 'https://www.yumpu.com/pt/document/read/64815386/cardapio-capitao';
+        $data = file_get_contents($url);
+        return $this->json($data);
+    }
 }

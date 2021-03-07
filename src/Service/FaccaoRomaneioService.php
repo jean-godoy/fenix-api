@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Symfony\Component\HttpFoundation\Response;
 use App\Repository\FaccaoRomaneioRepository;
 use App\Repository\RomaneioDescricaoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SequenciaOperacionalRepository;
 use App\Repository\SequenciaGradesRepository;
+use DateTime;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
  * Class FaccaoRomaneioService
@@ -130,6 +133,23 @@ use App\Repository\SequenciaGradesRepository;
         $this->em->persist($romaneio);
         $this->em->flush();
 
+
+        return true;
+    }
+
+    public function setPorjecaoColeta(Array $data)
+    {   
+        $romaneio = $this->faccaoRepository->findOneBy(["faccao_code" => $data['faccao_code'], "ordem_producao" => $data['ordem_producao']]) ?? null;
+        if($romaneio === null)
+        {
+            return false;
+        }
+
+        $date_format = new DateTime($data['projecao_coleta']);
+
+        $romaneio->setProjecaoColeta($date_format);
+        $this->em->persist($romaneio);
+        $this->em->flush();
 
         return true;
     }

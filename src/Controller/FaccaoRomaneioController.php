@@ -92,4 +92,28 @@ class FaccaoRomaneioController extends AbstractController
         return $this->json("Status atualizado com sucesso!", 200, [], []);
 
     }
+
+    /**
+     * @Route("/set-projecao-coleta", name="projecaoColeta", methods={"POST"})
+     */
+    public function projecaoColeta(): Response
+    {
+        $json = file_get_contents('php://input') ?? null;
+        
+        if($json === null || $json === "")
+        {
+            return $this->responseNotOK("ovrigatoria objeto de dados", false);
+        }
+
+        $data = json_decode($json, true);
+
+        $response = $this->faccaoService->setPorjecaoColeta($data);
+
+        if($response === false)
+        {
+            return "Problemas ao atualizar o projeção de coleta";
+        }
+
+        return $this->json("Projeção de coleta atualizada com sucesso!", 200, [], []);
+    }
 }
