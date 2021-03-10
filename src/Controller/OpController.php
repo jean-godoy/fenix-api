@@ -51,6 +51,9 @@ class OpController extends AbstractController
     public function uploadOp(Request $request)
     {
         $doctrine = $this->getDoctrine()->getManager();
+
+        $ficha_tecnica = file_get_contents($_FILES['ficha_tecnica']['tmp_name']);
+       
         $file = $_FILES['op_file']['tmp_name'];
 
         $data_now = new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'));
@@ -81,7 +84,12 @@ class OpController extends AbstractController
         if ($cor === null || $cor === "") {
             $cor = 000000;
         }
-
+        
+        //grava ficha_tecnica na paste
+        $file = fopen("../public/uploads/ficha_tecnica/{$ordem_producao}.jpg", "w");
+        fwrite($file, $ficha_tecnica);
+        fclose($file);
+        
         // descricao de servico
         $descString = explode(" - ", $refString);
         $descricao_servico = $descString[1];

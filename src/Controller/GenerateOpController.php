@@ -29,22 +29,17 @@ class GenerateOpController extends AbstractController
      * @Route("/create", name="create", methods={"POST"})
      */
     public function create()
-    {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-
-        $op_decode = base64_decode($data['op_file']);
-        $new_name = $op_decode . 'pdf';
-        
-        // $fileData = file_get_contents($_FILES['file']['tmp_name']);
-        // var_dump($fileData);
-        $file = fopen("/Users/usuario/projects/fenix/fenix_api/public/'.$new_name.'", "w");
-
-        fwrite($file, $new_name);
+    {   
+        $op = 1234;
+        //salva arquivo PDF no diretorio usando como referencia numero da op
+        $ficha_tecnica = file_get_contents($_FILES['ficha_tecnica']['tmp_name']);
+    
+        $file = fopen("../public/uploads/ficha_tecnica/{$op}.jpg", "w");
+        fwrite($file, $ficha_tecnica);
         fclose($file);
 
         return $this->json(
-            $data
+            []
         );
     }
 
