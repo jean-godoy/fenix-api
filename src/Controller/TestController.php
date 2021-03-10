@@ -109,4 +109,18 @@ class TestController extends AbstractController
         $data = file_get_contents($url);
         return $this->json($data);
     }
+
+    /**
+     * @Route("/money-convert", name="convert", methods={"GET"})
+     */
+    public function convert(): Response
+    {
+        $precisao = 2;
+        $value= "10.100,80";
+        // Remove o ponto
+        $value = str_replace('.', '', $value);
+        // Troca o a virgula pelo ponto
+        $value = str_replace(',', '.', $value);
+        return $this->json($value, 200, [], []);
+    }
 }

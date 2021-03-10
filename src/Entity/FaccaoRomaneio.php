@@ -72,6 +72,11 @@ class FaccaoRomaneio
      */
     private $projecao_coleta;
 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2)
+     */
+    private $valor_faccao;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -213,6 +218,18 @@ class FaccaoRomaneio
     public function setProjecaoColeta(?\DateTimeInterface $projecao_coleta): self
     {
         $this->projecao_coleta = $projecao_coleta;
+
+        return $this;
+    }
+
+    public function getValorFaccao(): ?string
+    {
+        return $this->valor_faccao;
+    }
+
+    public function setValorFaccao(string $valor_faccao): self
+    {
+        $this->valor_faccao = $valor_faccao;
 
         return $this;
     }

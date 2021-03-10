@@ -8,6 +8,7 @@ use App\Repository\RomaneioDescricaoRepository;
 use App\Entity\FaccaoRomaneio;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SequenciaGradesRepository;
+use App\Service\MoneyService;
 
 /**
  * Class RomaneioDescricao
@@ -26,15 +27,18 @@ class RomaneioService
     protected $romaneioRepository;
     protected $gradeRepository;
     private $em;
+    private $money;
 
     public function __construct(
         RomaneioDescricaoRepository $romaneioDescricaoRepository,
         EntityManagerInterface      $em,
-        SequenciaGradesRepository   $sequenciaGradesRepository
+        SequenciaGradesRepository   $sequenciaGradesRepository,
+        MoneyService                $moneyService
     ) {
         $this->romaneioRepository = $romaneioDescricaoRepository;
         $this->em                 = $em;
         $this->gradeRepository    = $sequenciaGradesRepository;
+        $this->money              = $moneyService;
     }
 
     /**
@@ -57,8 +61,8 @@ class RomaneioService
     public function save($array)
     {
         $data_now = new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'));
-
         $romaneio = new FaccaoRomaneio;
+    
         $romaneio->setFaccaoCode($array["faccao_code"]["value"]);
         $romaneio->setOrdemProducao($array["ordem_producao"]);
         $romaneio->setGrade(json_encode($array['grade']));
@@ -67,11 +71,10 @@ class RomaneioService
         $romaneio->setCreatedAt($data_now);
         $romaneio->setUpdatedAt($data_now);
         $romaneio->setFaccaoStatus(6);
+        $romaneio->setValorFaccao($this->money->toUsd($array['valor_faccao']));
 
         $this->em->persist($romaneio);
         $this->em->flush();
-
-        // $grade = $this->gradeRepository->findBy(["grade_code" => $array['grade']]);
 
         return true;
     }
