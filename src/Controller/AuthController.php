@@ -126,4 +126,25 @@ class AuthController extends AbstractController
         
         return $this->json($response, 200, [], $context);
     }
+
+    /**
+     * @Route("/login-finalizacao", name="loginFinalizacao", methods={"POST"})
+     */ 
+    public function loginFinalizacao(): Response
+    {   
+        $json = file_get_contents('php://input') ?? null;
+        if($json === null || $json ==="") {
+            return $this->responseNotOK("Objeto de dados obrigatorios", false);
+        }
+        $data = json_decode($json, true);
+
+        $response = $this->authService->login($data['email'], $data['pass']) ?? null;
+        if($response === null || $response === []) {
+            return $this->json("E-mail ou Senha não conferem!", 401, [], []);
+        }
+
+        return $this->json([
+            'success' => true
+        ]);
+    }
 }

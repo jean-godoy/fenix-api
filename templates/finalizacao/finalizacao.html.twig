@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{{ include('components/head/head.html.twig') }}
+	{{ include('components/menu/menu-finalizacao.html.twig') }}
+	<section class="container-first">
+
+		<div class="box-model">
+			<header class="menu-model">
+				<b>Finalização</b>
+			</header>
+			{# {{ dump(response) }} #}
+			<div class="box-model-main">
+                <div class="mt-20"></div>
+				<ul class="ul-finalizacao">
+					{% for item in response %}
+						<li class="li-finalizacao">
+							<a class="li-finalizacao-a" href="/template/finalizacao-get/{{ item.faccao_code }}/{{ item.ordem_producao }}">{{ item.ordem_producao }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+
+		</div>
+
+	</section>
+{% endblock %}

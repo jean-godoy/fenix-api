@@ -1,0 +1,48 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	<div class="container-login">
+		<section class="box-login">
+
+			<header class="login-header">
+				<h1>Sexta Feira - Login</h1>
+			</header>
+
+			<div class="login-main">
+
+				<header class="login-main-header">
+					<h3>Fenix Facçoões - Finalização</h3>
+				</header>
+
+				<form class="login-form">
+
+					<div class="login-form-group">
+						<label class="login-label">
+							<b>E-mail</b>
+						</label>
+						<input type="text" name="email" id="email" class="login-input" placeholder="E-mail">
+					</div>
+
+					<div class="login-form-group">
+						<label class="login-label">
+							<b>Senha</b>
+						</label>
+						<input type="password" name="pass" id="pass" class="login-input" placeholder="Password">
+					</div>
+
+				</form>
+			</div>
+			<button class="login-bt" onclick="checkLogin()" >Entrar</button>
+			<footer class="login-footer">
+				<p>&copy;
+					<a href="https://www.seidesistemas.com.br">Seide Sitemas</a>
+					- 2021
+				</p>
+			</div>
+
+		</section>
+	</div>
+
+
+{% endblock %}

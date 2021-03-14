@@ -1,0 +1,77 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+	{{ include('components/head/head.html.twig') }}
+	{{ include('components/menu/menu-finalizacao.html.twig') }}
+	<section class="container-first">
+
+		<div class="box-model">
+			<header class="menu-model">
+				<b>Finalização - Ordem Produção:
+					{{ response.ordemProducao }}
+				</b>
+			</header>
+			<pre>
+                
+            </pre>
+			{# romaneio: {{ dump(response.romaneioCode) }} #}
+			<div class="box-model-check">
+
+				<form id="form" name="registration" method="post" onsubmit="handlePost()" >
+                    
+                    <input type="hidden" name="romaneio_code" id="romaneio_code" value={{ response.romaneioCode }}>
+
+					<div class="form-group">
+						<input class="input-checked" type="radio" id="status-11" value="11" name="status" {{ response.faccaoStatus == '11' ? 'checked' : '' }} onclick="handleInput('status-11')">
+						<label for="status-11">
+							<b>Coletado</b>
+						</label>
+					</div>
+
+					<div class="form-group">
+						<input class="input-checked" type="radio" id="status-12" value="12" name="status" {{ response.faccaoStatus == '12' ? 'checked' : '' }} onclick="handleInput('status-12')">
+						<label for="status-12">
+							<b>Tag</b>
+						</label>
+					</div>
+
+					<div class="form-group">
+						<input class="input-checked" type="radio" id="status-13" value="13" name="status" {{ response.faccaoStatus == '13' ? 'checked' : '' }} onclick="handleInput('status-13')" >
+						<label for="status-13">
+							<b>Revisão</b>
+						</label>
+					</div>
+
+					<div class="form-group">
+						<input class="input-checked" type="radio" id="status-14" value="14" name="status" {{ response.faccaoStatus == '14' ? 'checked' : '' }} onclick="handleInput('status-14')" >
+						<label for="status-14">
+							<b>Flush</b>
+						</label>
+					</div>
+
+					<div class="form-group">
+						<input class="input-checked" type="radio" id="status-15" value="15" name="status" {{ response.faccaoStatus == '15' ? 'checked' : '' }} onclick="handleInput('status-15')" >
+						<label for="status-15">
+							<b>Tonalidade</b>
+						</label>
+					</div>
+
+					<div class="form-group">
+						<input class="input-checked" type="radio" id="status-16" value="16" name="status" {{ response.faccaoStatus == '16' ? 'checked' : '' }} onclick="handleInput('status-16')" >
+						<label for="status-16">
+							<b>Pronto para Embarque</b>
+						</label>
+					</div>
+                    <button id="btn-salvar" type="submit" value="Load!">Submit</button>
+				</form>
+
+				<a class="link-bt" to="/finalização">Cancelar</a>
+				<button class="button" type="submit" id="btn-salvar" onclick="onSubmit()">Salvar</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</section>{% endblock %}

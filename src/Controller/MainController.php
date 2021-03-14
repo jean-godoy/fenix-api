@@ -17,6 +17,14 @@ class MainController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('login/login.twig');
+        return $this->render('login/login.html.twig');
+    }
+
+    /**
+     * @Route("/home", name="home", methods={"GET"})
+     */
+    public function home(): Response
+    {
+        return $this->render('main/main.html.twig');
     }
 }
