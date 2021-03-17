@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    {{ include('components/head/head.html.twig') }}
+    {{ include('components/menu/menu-finalizacao.html.twig') }}
+    <section class="container-main">
+
+        <div class="box-logout">
+            <header class="menu-header-logout"><b>Deseja realmente sair?</b></header>
+            <div class="logout-group">
+                <a class="logout-bt" href="/template/cancelar">Cancelar</a>
+                <a class="logout-bt" href="/template/logout">Sair</a>
+            </div>
+        </div>
+   
+    </section>
+{% endblock %}

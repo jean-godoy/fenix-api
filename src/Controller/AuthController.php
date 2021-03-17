@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Users;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use App\Service\SessionService;
 
 use App\Util\Traits\ResponseTrait;
 use App\Service\AuthService;
@@ -20,11 +21,14 @@ class AuthController extends AbstractController
 {
     use ResponseTrait;
     private $authService;
+    private $session;
 
     public function __construct(
-        AuthService      $authService
+        AuthService     $authService,
+        SessionService  $sessionService            
     ) {
         $this->authService  = $authService;
+        $this->session      = $sessionService;
     }
 
     /**
@@ -132,6 +136,7 @@ class AuthController extends AbstractController
      */ 
     public function loginFinalizacao(): Response
     {   
+
         $json = file_get_contents('php://input') ?? null;
         if($json === null || $json ==="") {
             return $this->responseNotOK("Objeto de dados obrigatorios", false);
@@ -143,6 +148,11 @@ class AuthController extends AbstractController
             return $this->json("E-mail ou Senha não conferem!", 401, [], []);
         }
 
+        $token = explode(':', $response)[1];
+
+        $generateSession = $this->session->createSession($token);
+        echo "Sessao ".$generateSession;
+        
         return $this->json([
             'success' => true
         ]);

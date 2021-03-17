@@ -1,4 +1,4 @@
-
+const BASE_URL = "http://localhost:8000";
 
 function checkLogin() {
 
@@ -13,17 +13,18 @@ function checkLogin() {
 
     const data_string = JSON.stringify(data_value);
 
-    fetch("http://localhost:8000/auth/login-finalizacao", {
+    fetch(BASE_URL+"/auth/login-finalizacao", {
         method: "POST",
         body: data_string
     }).then((data) => {
+        
         if (data.status === 200) {
-            window.location.assign("http://localhost:8000/home/");
+            window.location.assign(BASE_URL+"/template/home/");
         } else {
-            alert('erro')
+            alert('Network error...')
         }
     }).catch(e => {
-        alert('Erro ao logar!');
+        alert('Usuário o senha invalidos!');
     });
 
 }
@@ -43,14 +44,14 @@ function onSubmit() {
 
     const data_string = JSON.stringify(data_value);
 
-    fetch("http://localhost:8000/api/finalizacao/set-status", {
+    fetch(BASE_URL+"/api/finalizacao/set-status", {
         method: "POST",
         body: data_string
     }).then((data) => {
         if (data.status === 200) {
             alert("Status atualizado com sucesso!");
             console.log(data)
-            window.location.assign("http://localhost:8000/template/finalizacao");
+            window.location.assign(BASE_URL+"/template/finalizacao");
         } else {
             alert('erro')
         }
