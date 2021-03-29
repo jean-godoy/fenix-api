@@ -10,13 +10,13 @@ use App\Repository\RomaneioDescricaoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Class FinalizacaoRomaneioService
+ * Class FinalizadosService
  * @package App\Entity
  * @author Jean Godoy
  * @link https://seidesistemas.com.br
  */
 
-class FinalizacaoService
+class FinalizadosService
 {
 
     /**

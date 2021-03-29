@@ -9,11 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 use App\Entity\Faccoes;
-
+use App\Repository\SequenciaOperacionalRepository;
 use App\Service\RomaneioService;
 use App\Service\EstoqueService;
 use App\Util\Traits\ResponseTrait;
 use App\Service\CheckOpService;
+use App\Entity\SequenciaOperacional;
 
 
 
@@ -195,24 +196,62 @@ class RomaneioController extends AbstractController
         $json = file_get_contents('php://input');
         $array = json_decode($json, TRUE );
 
-        $doctrine = $this->getDoctrine()->getManager();
+        $doctrine = $this->getDoctrine();
 
         $response = $this->romaneioService->save($array, $doctrine) ?? null;
         if($response === null || $response === "")
         {
             return $this->responseNotOK("Nenhum dado registrado correspondente!", false);
         }
+
+       foreach($array['sequencia'] as $item) {
+        $sequencia = $doctrine->getRepository(SequenciaOperacional::class)->findOneBy(["reference_code" => $item]);
+        $sequencia->setChecked(true);
+        $maneger = $doctrine->getManager();
+        $maneger->flush();
+       }
+    
         
         return $this->json($response, 200, [], $context);
     }
 
     /**
+     * @Route("/get-romaneios-by-nfe/{nfe}", name="romaneioNfe", methods={"GET"})
+     */
+    public function romaneioNfe($nfe): Response
+    {  
+         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $response = $this->romaneioService->getRomaneioByNfe($nfe) ?? null;
+        if($response === null || $response === "")
+        {
+            return $this->responseNotOK("Nenhum romaneio cadastrado!", false);
+        }
+
+        return $this->json($response, 200, [], $context);
+    }
+
+     /**
+     * @Route("/financeiro-finalizados-lista/{nfe}", name="financeiroRomaneioList", methods={"GET"})
+     */
+    public function financeiroRomaneioList($nfe): Response
+    {  
+         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+        $response = $this->romaneioService->getFinanceiroRomaneioByNfe($nfe) ?? null;
+        if($response === null || $response === "")
+        {
+            return $this->responseNotOK("Nenhum romaneio cadastrado!", false);
+        }
+
+        return $this->json($response, 200, [], $context);
+    }
+
+     /**
      * @Route("/list", name="list", methods={"GET"})
      */
     public function list()
     {  
          $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
-        $response = $this->romaneioService->list() ?? null;
+        $response = $this->romaneioService->nfeList() ?? null;
         if($response === null || $response === "")
         {
             return $this->responseNotOK("Nenhum romaneio cadastrado!", false);

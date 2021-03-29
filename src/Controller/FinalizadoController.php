@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Service\FinalizacaoService;
+use App\Service\FinalizadosService;
 use App\Util\Traits\ResponseTrait;
 use App\Service\FaccaoRomaneioService;
 
@@ -14,19 +14,19 @@ use App\Service\FaccaoRomaneioService;
 /**
  * @Route("/api/finalizacao", name="api_")
  */
-class FinalizacaoController extends AbstractController
+class FinalizadoController extends AbstractController
 {
     use ResponseTrait;
 
-    private $finalizacaoService;
+    private $finalizadosService;
     private $faccaoRomaneioService;
 
     public function __construct(
-        FinalizacaoService      $finalizacaoService,
+        FinalizadosService      $finalizadosService,
         FaccaoRomaneioService   $faccaoRomaneioService
     )
     {
-        $this->finalizacaoService       = $finalizacaoService;
+        $this->finalizadosService       = $finalizadosService;
         $this->faccaoRomaneioService    = $faccaoRomaneioService;
     }
 

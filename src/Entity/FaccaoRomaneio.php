@@ -77,6 +77,16 @@ class FaccaoRomaneio
      */
     private $valor_faccao;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $iniciado;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $finalizado;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -230,6 +240,30 @@ class FaccaoRomaneio
     public function setValorFaccao(string $valor_faccao): self
     {
         $this->valor_faccao = $valor_faccao;
+
+        return $this;
+    }
+
+    public function getIniciado(): ?\DateTimeInterface
+    {
+        return $this->iniciado;
+    }
+
+    public function setIniciado(?\DateTimeInterface $iniciado): self
+    {
+        $this->iniciado = $iniciado;
+
+        return $this;
+    }
+
+    public function getFinalizado(): ?\DateTimeInterface
+    {
+        return $this->finalizado;
+    }
+
+    public function setFinalizado(?\DateTimeInterface $finalizado): self
+    {
+        $this->finalizado = $finalizado;
 
         return $this;
     }

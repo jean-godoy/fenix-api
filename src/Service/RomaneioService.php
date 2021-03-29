@@ -9,6 +9,8 @@ use App\Entity\FaccaoRomaneio;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SequenciaGradesRepository;
 use App\Service\MoneyService;
+use App\Entity\SequenciaOperacional;
+use App\Repository\SequenciaOperacionalRepository;
 
 /**
  * Class RomaneioDescricao
@@ -28,17 +30,20 @@ class RomaneioService
     protected $gradeRepository;
     private $em;
     private $money;
+    private $sequenciaOperacional;
 
     public function __construct(
-        RomaneioDescricaoRepository $romaneioDescricaoRepository,
-        EntityManagerInterface      $em,
-        SequenciaGradesRepository   $sequenciaGradesRepository,
-        MoneyService                $moneyService
+        RomaneioDescricaoRepository     $romaneioDescricaoRepository,
+        EntityManagerInterface          $em,
+        SequenciaGradesRepository       $sequenciaGradesRepository,
+        MoneyService                    $moneyService,
+        SequenciaOperacionalRepository  $sequenciaOperacionalRepository
     ) {
-        $this->romaneioRepository = $romaneioDescricaoRepository;
-        $this->em                 = $em;
-        $this->gradeRepository    = $sequenciaGradesRepository;
-        $this->money              = $moneyService;
+        $this->romaneioRepository       = $romaneioDescricaoRepository;
+        $this->em                       = $em;
+        $this->gradeRepository          = $sequenciaGradesRepository;
+        $this->money                    = $moneyService;
+        $this->sequenciaOperacional     = $sequenciaOperacionalRepository;
     }
 
     /**
@@ -58,12 +63,12 @@ class RomaneioService
     /**
      * @return Response[]
      */
-    public function save($array)
+    public function save($array, $doctrine)
     {
         $data_now = new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'));
         $romaneio = new FaccaoRomaneio;
-    
-        $romaneio->setFaccaoCode($array["faccao_code"]["value"]);
+
+        $romaneio->setFaccaoCode($array["faccao_code"]);
         $romaneio->setOrdemProducao($array["ordem_producao"]);
         $romaneio->setGrade(json_encode($array['grade']));
         $romaneio->setSeguencia(json_encode($array['sequencia']));
@@ -73,8 +78,26 @@ class RomaneioService
         $romaneio->setFaccaoStatus(6);
         $romaneio->setValorFaccao($this->money->toUsd($array['valor_faccao']));
 
-        $this->em->persist($romaneio);
-        $this->em->flush();
+        // $this->em->persist($romaneio);
+        // $this->em->flush();
+
+       
+
+        // $conn = $this->em->getConnection();
+        // $conn->beginTransaction();
+        // foreach ($array['sequencia'] as $seq) {
+        //     $sql = "UPDATE sequencia_operacional SET checked = true WHERE reference_code = '$seq' ";
+        // }
+        // $sql = $conn->prepare($sql);
+        // $sql->execute();
+
+        // for ($i=1; $i <= count($array['sequencia']) ; $i++) { 
+            
+        //     $sql = "UPDATE sequencia_operacional SET checked = true WHERE reference_code = ".$array['sequencia'][$i];
+        //     $sql = $conn->prepare($sql);
+        //     $sql->execute();
+        // }
+
 
         return true;
     }
@@ -101,5 +124,77 @@ class RomaneioService
         } else {
             return [];
         }
+    }
+
+    /**
+     * @return Response[]
+     */
+    public function getRomaneioByNfe($nfe)
+    {
+        $conn = $this->em->getConnection();
+
+        $sql = "SELECT * FROM romaneio_descricao AS romaneio
+                LEFT JOIN faccao_romaneio AS faccao
+                ON romaneio.ordem_producao = faccao.ordem_producao
+                LEFT JOIN faccoes
+                ON faccao.faccao_code = faccoes.faccao_code
+                WHERE romaneio.num_nfe = $nfe
+            ";
+
+        $sql = $conn->prepare($sql);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $response = $sql->fetchAll();
+            return $response;
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @return Response[]
+     */
+    public function getFinanceiroRomaneioByNfe($nfe)
+    {
+        $conn = $this->em->getConnection();
+
+        $sql = "SELECT * FROM romaneio_descricao AS romaneio
+                LEFT JOIN faccao_romaneio AS faccao
+                ON romaneio.ordem_producao = faccao.ordem_producao
+                LEFT JOIN faccoes
+                ON faccao.faccao_code = faccoes.faccao_code
+                WHERE romaneio.num_nfe = $nfe
+                AND faccao.faccao_status >= 11
+            ";
+
+        $sql = $conn->prepare($sql);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $response = $sql->fetchAll();
+            return $response;
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @return Response[]
+     */
+    public function nfeList()
+    {
+        $conn =  $this->em->getConnection();
+        $sql = "SELECT id, nfe_number, status FROM checking WHERE status = 5 ";
+
+        $sql = $conn->prepare($sql);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $response = $sql->fetchAll();
+            return $response;
+        }
+
+        return [];
     }
 }

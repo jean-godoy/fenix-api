@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-use App\Service\FinalizacaoService;
+use App\Service\FinalizadosService;
 use App\Util\Traits\ResponseTrait;
 use App\Service\FaccaoRomaneioService;
 use phpDocumentor\Reflection\Types\Void_;
@@ -24,16 +24,16 @@ class TemplateController extends AbstractController
 {
     use ResponseTrait;
 
-    private $finalizacaoService;
+    private $finalizadosService;
     private $faccaoRomaneioService;
     private $session;
 
     public function __construct(
-        FinalizacaoService      $finalizacaoService,
+        FinalizadosService      $finalizadosService,
         FaccaoRomaneioService   $faccaoRomaneioService,
         SessionService          $sessionService
     ) {
-        $this->finalizacaoService       = $finalizacaoService;
+        $this->finalizadosService       = $finalizadosService;
         $this->faccaoRomaneioService    = $faccaoRomaneioService;
         $this->session                  = $sessionService;
     }
@@ -62,7 +62,7 @@ class TemplateController extends AbstractController
             
             return $this->redirect('/', 308);
         }
-        $response = $this->finalizacaoService->getAll();
+        $response = $this->finalizadosService->getAll();
 
         return $this->render('finalizacao/finalizacao.html.twig', [
             'response' => $response,
@@ -89,7 +89,7 @@ class TemplateController extends AbstractController
             return $this->responseNotOK("Parametro obrigatório, op");
         }
 
-        $response = $this->finalizacaoService->getBy($faccao_code, $op);
+        $response = $this->finalizadosService->getBy($faccao_code, $op);
 
         $serializer = new Serializer([new ObjectNormalizer()]);
 

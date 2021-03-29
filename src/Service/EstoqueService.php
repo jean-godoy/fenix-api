@@ -8,7 +8,6 @@ use App\Repository\RomaneioDescricaoRepository;
 use App\Repository\SequenciaGradesRepository;
 use App\Repository\SequenciaOperacionalRepository;
 use App\Repository\RomaneioFooterRepository;
-use Laminas\Code\Reflection\FunctionReflection;
 
 /**
  * Class EstoqueService
@@ -46,7 +45,7 @@ use Laminas\Code\Reflection\FunctionReflection;
 
     public function show()
     {
-        $response = $this->romaneioRepository->findBy(["status" => 5]);
+        $response = $this->romaneioRepository->findAll();
 
         if($response !== null | $response !== ""){
             return $response;
@@ -81,7 +80,7 @@ use Laminas\Code\Reflection\FunctionReflection;
 
     public function getSequencia($op)
     {
-        $sequencia = $this->sequenciaRepository->findBy(["ordemProducao" => $op]);
+        $sequencia = $this->sequenciaRepository->findBy(["ordemProducao" => $op, "checked" => null]);
 
         if($sequencia !== null || $sequencia !== "")
         {

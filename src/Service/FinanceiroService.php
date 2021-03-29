@@ -8,6 +8,9 @@ use App\Repository\FinanceiroRepository;
 use App\Entity\Financeiro;
 use Doctrine\ORM\EntityManagerInterface;
 
+use App\Repository\TabelaPagamentosRepository;
+use App\Entity\TabelaPagamentos;
+
 /**
  * Class Financeiro
  * @package App\Entity
@@ -22,20 +25,23 @@ use Doctrine\ORM\EntityManagerInterface;
      */
 
      protected $financeiroRepository;
+     protected $tabelaPagamentos;
      private $em;
 
      public function __construct(
-         FinanceiroRepository   $finaceiroRepository,
-         EntityManagerInterface $entityManagerInterface
+         FinanceiroRepository       $finaceiroRepository,
+         EntityManagerInterface     $entityManagerInterface,
+         TabelaPagamentosRepository $tabelaPagamentosRepository
      )
      {
          $this->financeiroRepository    = $finaceiroRepository;
          $this->em                      = $entityManagerInterface;
+         $this->tabelaPagamentos        = $tabelaPagamentosRepository;    
      }
 
-     public function getAll()
+     public function showTabelaPagamentos()
      {
-         $pagamentos = $this->financeiroRepository->findAll() ?? null;
+         $pagamentos = $this->tabelaPagamentos->findAll() ?? null;
          if($pagamentos === null || $pagamentos === ""){
              return  false;
          }
@@ -43,21 +49,40 @@ use Doctrine\ORM\EntityManagerInterface;
          return $pagamentos;
      }
 
-     public function save(Array $data)
-     {
-        // var_dump($data); exit;
-        $financeiro = new Financeiro;
+    //  public function save(Array $data)
+    //  {
+    //     // var_dump($data); exit;
+    //     $financeiro = new Financeiro;
 
+    //     $data_entrega = new \DateTime($data['data_entrega']);
+    //     $data_pagamento = new \DateTime($data['data_pagamento']);
+    //     // var_dump($data_pagamento); exit();
+
+    //     $financeiro->setDataEntraga($data_entrega);
+    //     $financeiro->setDataPagamento($data_pagamento);
+    //     $this->em->persist($financeiro);
+    //     $this->em->flush();
+
+    //     return true;
+    //  }
+
+     public function saveDataPagamento(Array $data)
+     {
+        $pagamentos = new TabelaPagamentos;
+
+        $data = str_replace('/', '-', $data);
+       
         $data_entrega = new \DateTime($data['data_entrega']);
         $data_pagamento = new \DateTime($data['data_pagamento']);
-        // var_dump($data_pagamento); exit();
-
-        $financeiro->setDataEntraga($data_entrega);
-        $financeiro->setDataPagamento($data_pagamento);
-        $this->em->persist($financeiro);
+        
+        $pagamentos->setDataEntrega(new \DateTime($data['data_entrega']));
+        $pagamentos->setDataPagamento($data_pagamento);
+       
+        $this->em->persist($pagamentos);
         $this->em->flush();
 
         return true;
+
      }
 
      

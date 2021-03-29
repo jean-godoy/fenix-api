@@ -65,7 +65,7 @@ class OpController extends AbstractController
         //ordem de producao
         $ordem_producao = $request->get('num_op');
         if ($ordem_producao === null || $ordem_producao === "") {
-            return $this->responseNotOK("Campo Obrigatorio, ordem_produca", false);
+            return $this->responseNotOK("Campo Obrigatorio, ordem_producao", false);
         }
 
         // num NF-e
@@ -131,7 +131,7 @@ class OpController extends AbstractController
         for ($i = 0; $i <= $numGrade; $i++) {
             $grade = new SequenciaGrades;
 
-            $grade->setOp($ordem_producao);
+            $grade->setOp(intval($ordem_producao));
             // ordem das grades
             $grade->setGrade($array["body"]["table"]["tr"][4]["td"][$i]["p"]);
             // quantidade das grades
@@ -154,7 +154,7 @@ class OpController extends AbstractController
 
         // insercao na db romaneio_descricao
         $romaneio_descricao = new RomaneioDescricao();
-        $romaneio_descricao->setOrdemProducao($ordem_producao);
+        $romaneio_descricao->setOrdemProducao(intval($ordem_producao));
         $romaneio_descricao->setReferencia($referencia);
         $romaneio_descricao->setCor($cor);
         $romaneio_descricao->setDescricaoServico($descricao_servico);
@@ -180,7 +180,7 @@ class OpController extends AbstractController
             $romaneio = new SequenciaOperacional();
             $romaneio->setReferenceCode(md5(uniqid(rand() . "", true)));
             $romaneio->setReferencia($referencia);
-            $romaneio->setOrdemProducao($ordem_producao);
+            $romaneio->setOrdemProducao(intval($ordem_producao));
             $romaneio->setMaquina($array["body"]["table"]["tr"][$i]["td"][0]["p"]);
             $romaneio->setSequencia($array["body"]["table"]["tr"][$i]["td"][1]["p"]);
             $romaneio->setOperacao($array["body"]["table"]["tr"][$i]["td"][2]["p"]);
@@ -206,7 +206,7 @@ class OpController extends AbstractController
         $total_pecas_hora   = $array["body"]["table"]["tr"][$number]["td"][4]["p"];
 
         $footer = new RomaneioFooter();
-        $footer->setOrdemProducao($ordem_producao);
+        $footer->setOrdemProducao(intval($ordem_producao));
         $footer->setAtencao($atencao);
         $footer->setTotalSemInt($total_sem_int);
         $footer->setTotalComInt($total_com_int);

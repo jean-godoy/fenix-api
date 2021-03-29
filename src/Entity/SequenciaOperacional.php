@@ -82,6 +82,11 @@ class SequenciaOperacional
      */
     private $referencia;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $checked;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -247,6 +252,18 @@ class SequenciaOperacional
     public function setReferencia(int $referencia): self
     {
         $this->referencia = $referencia;
+
+        return $this;
+    }
+
+    public function getChecked(): ?bool
+    {
+        return $this->checked;
+    }
+
+    public function setChecked(?bool $checked): self
+    {
+        $this->checked = $checked;
 
         return $this;
     }

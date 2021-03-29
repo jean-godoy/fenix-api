@@ -30,7 +30,7 @@ class FinanceiroController extends AbstractController
      */
     public function show(): Response
     {
-        $response = $this->financeiroService->getAll();
+        $response = $this->financeiroService->showTabelaPagamentos();
         if($response === false || $response === []){
             return $this->responseNotOK([
                 "response"  => "Nenhuma data cadastrada!",
@@ -53,7 +53,7 @@ class FinanceiroController extends AbstractController
 
         $data = json_decode($json, true);
         
-        $response = $this->financeiroService->save($data);
+        $response = $this->financeiroService->saveDataPagamento($data);
         if($response !== true){
             return $this->responseNotOK("Erro ao cadastrar datas!", false);
         }
