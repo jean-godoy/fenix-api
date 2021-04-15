@@ -28,7 +28,7 @@ class BankData
     private $nome_titular;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="bigint")
      */
     private $cpf_titular;
 
@@ -58,7 +58,7 @@ class BankData
     private $updated_at;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $deleted_at;
 
