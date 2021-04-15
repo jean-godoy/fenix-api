@@ -78,6 +78,6 @@ class FormPaymentController extends AbstractController
         $data = json_decode($json, true);
        $response = $this->paymentService->update($data);
 
-        return $this->json([], 200, [], []);
+        return $this->json($response, 200, [], []);
     }
 }
