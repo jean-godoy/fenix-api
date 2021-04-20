@@ -35,11 +35,13 @@ class FaccaoRomaneioController extends AbstractController
     }
 
     /**
+     * para o app react
      * @Route("/get-list/{op}", name="getList", methods={"GET"})
      */
     public function getList(Request $request, $op)
     {
         $context['ignored_attributes'] = ['id', 'createdAt', 'deletedAt', 'updatedAt'];
+
         $faccao_code = $request->headers->get('Authorization') ?? null;
         if ($faccao_code === null || $faccao_code === "") {
             return $this->responseNotOK("Header obrigatorio, faccao_code", false);
@@ -48,12 +50,43 @@ class FaccaoRomaneioController extends AbstractController
         if ($op === null || $op === "") {
             return $this->responseNotOK("Campo obrigatorio, op", false);
         }
-
+       
         $romaneio = $this->faccaoService->getBy($faccao_code, $op);
         if ($romaneio === null || $romaneio === "") {
             return $this->responseNotOK("Nenhum romaneio correspondente ao O.P.", false);
         }
+        
+        $sequencia = $this->faccaoService->getSequenciaOp($romaneio["seguencia"]);
+        $grade = $this->faccaoService->getGrade($romaneio['grade'], $op);
 
+        return $this->json([
+            "romaneio"  => $romaneio,
+            "sequencia" => $sequencia,
+            "grade"     => $grade
+        ], 200, [], $context);
+    }
+
+     /**
+      * para o app angular teste
+     * @Route("/get-romaneio-list/{faccao_code}/{op}", name="getList", methods={"GET"})
+     */
+    public function getRomaneioList(Request $request, String $op, String $faccao_code)
+    {
+        $context['ignored_attributes'] = ['id', 'createdAt', 'deletedAt', 'updatedAt'];
+
+        if ($faccao_code === null || $faccao_code === "") {
+            return $this->responseNotOK("Paramentro obrogatorio faccao_code", false);
+        }
+
+        if ($op === null || $op === "") {
+            return $this->responseNotOK("Paramentro obrigatorio, op", false);
+        }
+       
+        $romaneio = $this->faccaoService->getBy($faccao_code, $op);
+        if ($romaneio === null || $romaneio === "") {
+            return $this->responseNotOK("Nenhum romaneio correspondente ao O.P.", false);
+        }
+        
         $sequencia = $this->faccaoService->getSequenciaOp($romaneio["seguencia"]);
         $grade = $this->faccaoService->getGrade($romaneio['grade'], $op);
 
@@ -97,6 +130,27 @@ class FaccaoRomaneioController extends AbstractController
      * @Route("/set-projecao-coleta", name="projecaoColeta", methods={"POST"})
      */
     public function projecaoColeta(): Response
+    {
+        $json = file_get_contents('php://input') ?? null;
+        
+        if($json === null || $json === "")
+        {
+            return $this->responseNotOK("ovrigatoria objeto de dados", false);
+        }
+
+        $data = json_decode($json, true);
+
+        $response = $this->faccaoService->setPorjecaoColeta($data);
+
+        if($response === false)
+        {
+            return "Problemas ao atualizar o projeção de coleta";
+        }
+
+        return $this->json("Projeção de coleta atualizada com sucesso!", 200, [], []);
+    }
+
+    public function projecaoColeta1(): Response
     {
         $json = file_get_contents('php://input') ?? null;
         
