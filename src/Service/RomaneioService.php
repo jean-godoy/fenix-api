@@ -89,9 +89,9 @@ class RomaneioService
         $sql = $conn->prepare($sql);
         $sql->execute();
 
-        for ($i=1; $i <= count($array['sequencia']) ; $i++) { 
-            
-            $sql = "UPDATE sequencia_operacional SET checked = true WHERE reference_code = ".$array['sequencia'][$i];
+        for ($i = 1; $i <= count($array['sequencia']); $i++) {
+
+            $sql = "UPDATE sequencia_operacional SET checked = true WHERE reference_code = '{$array['sequencia'][$i]}'";
             $sql = $conn->prepare($sql);
             $sql->execute();
         }
