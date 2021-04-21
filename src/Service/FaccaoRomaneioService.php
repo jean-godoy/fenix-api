@@ -128,7 +128,9 @@ use Symfony\Component\VarDumper\Cloner\Data;
             return false;
         }
 
-        $romaneio->setFaccaoStatus($data['status']);
+        $status = $data['status'];
+
+        $romaneio->setFaccaoStatus(\intval($status));
         $romaneio->setStatusUpdated(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
         /**

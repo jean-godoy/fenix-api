@@ -103,6 +103,7 @@ class FaccaoRomaneioController extends AbstractController
     public function setStatus(Request $request)
     {   
         $token = $request->headers->get('Authorization') ?? null;
+        
         if($token === null || $token === "")
         {
             return $this->responseNotOK("Autorização obrigatoria, token", false);
@@ -115,14 +116,14 @@ class FaccaoRomaneioController extends AbstractController
         }
 
         $data = json_decode($json, true);
-
+        
         $response = $this->faccaoService->setStatus($data);
         if($response === false || $response === "")
         {
             return $this->responseNotOK("Erro ao atualizar o status, tente novamente", false);
         }
        
-        return $this->json("Status atualizado com sucesso!", 200, [], []);
+        return $this->json(true, 200, [], []);
 
     }
 
@@ -150,24 +151,4 @@ class FaccaoRomaneioController extends AbstractController
         return $this->json("Projeção de coleta atualizada com sucesso!", 200, [], []);
     }
 
-    public function projecaoColeta1(): Response
-    {
-        $json = file_get_contents('php://input') ?? null;
-        
-        if($json === null || $json === "")
-        {
-            return $this->responseNotOK("ovrigatoria objeto de dados", false);
-        }
-
-        $data = json_decode($json, true);
-
-        $response = $this->faccaoService->setPorjecaoColeta($data);
-
-        if($response === false)
-        {
-            return "Problemas ao atualizar o projeção de coleta";
-        }
-
-        return $this->json("Projeção de coleta atualizada com sucesso!", 200, [], []);
-    }
 }
