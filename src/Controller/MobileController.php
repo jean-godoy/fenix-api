@@ -41,9 +41,14 @@ class MobileController extends AbstractController
         }
 
         $part = explode(" ", $token);
+        $token_data = $this->authService->validate($part[1]);
         $user_email = $this->authService->validate($part[1])->user_email;
+        
         $faccao_code = $this->mobileService->faccaoCode($user_email);
         
-        return $this->json($faccao_code);
+        return $this->json([
+            'token_data' => $token_data,
+            'faccao_code' => $faccao_code
+        ], 200, [], []);
     }
 }
