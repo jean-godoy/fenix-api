@@ -45,7 +45,7 @@ use App\Repository\FaccoesRepository;
             return null;
         }
 
-        return $faccao_code;
+        return $faccao_code->getFaccaoCode();
     }
 
  }
