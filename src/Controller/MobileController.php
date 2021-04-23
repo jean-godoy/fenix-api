@@ -46,6 +46,10 @@ class MobileController extends AbstractController
         
         $faccao_code = $this->mobileService->faccaoCode($user_email);
         
+        if ($faccao_code === null) {
+            $faccao_code = "inDrive";
+        }
+        
         return $this->json([
             'token_data' => $token_data,
             'faccao_code' => $faccao_code

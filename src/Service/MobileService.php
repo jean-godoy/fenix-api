@@ -38,7 +38,12 @@ use App\Repository\FaccoesRepository;
     public function faccaoCode($email)
     {
         $user_code = $this->usersRepository->findOneBy(["user_email" => $email])->getUserCode();
-        $faccao_code = $this->faccaoRepository->findOneBy(["user_code" => $user_code])->getFaccaoCode();
+        
+        $faccao_code = $this->faccaoRepository->findOneBy(["user_code" => $user_code]);
+        
+        if($faccao_code == NULL) {
+            return null;
+        }
 
         return $faccao_code;
     }
