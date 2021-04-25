@@ -137,7 +137,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
          * Caso status seja igual a 7,
          * seta a data de inicio
          */
-        if($data['status'] === 7) {
+        if($data['status'] == 7) {
             $romaneio->setIniciado(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
         }
 
@@ -145,7 +145,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
          * Caso status seja igual a 9,
          * seta data de finalização
          */
-        if($data['status'] === 9) {
+        if($data['status'] == 9) {
             $romaneio->setFinalizado(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
         }
 
