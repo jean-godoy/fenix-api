@@ -49,6 +49,8 @@ use Symfony\Component\VarDumper\Cloner\Data;
     }
 
     /**
+     * Retorna uma lista de romaneios pelo
+     * facção code
      * @return Response[]
      */
     public function list($faccao_code)
@@ -59,7 +61,9 @@ use Symfony\Component\VarDumper\Cloner\Data;
         $sql = "SELECT * FROM faccao_romaneio AS faccao
                 INNER JOIN romaneio_descricao AS romaneio
                 ON romaneio.ordem_producao = faccao.ordem_producao
-                WHERE faccao.faccao_code = '$faccao_code' ";
+                WHERE faccao.faccao_code = '$faccao_code' 
+                AND faccao.faccao_status >= 6
+                AND faccao.faccao_status <= 8";
 
         $sql = $conn->prepare($sql);
         $sql->execute();
