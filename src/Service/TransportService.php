@@ -48,6 +48,8 @@ use Doctrine\ORM\EntityManagerInterface;
                 ON romaneio.faccao_code = faccoes.faccao_code
                 WHERE romaneio.faccao_code = '$faccao_code'
                 AND romaneio.ordem_producao = '$op' 
+                AND romaneio.faccao_status >= 9
+                AND romaneio.faccao_status <= 10
             ";
 
         $sql = $conn->prepare($sql);
