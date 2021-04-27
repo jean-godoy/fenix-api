@@ -27,16 +27,15 @@ class RomaneioController extends AbstractController
     private $romaneioService;
     private $estoqueService;
     private $checkOpService;
-    
+
     public function __construct(
         RomaneioService             $romaneioService,
         EstoqueService              $estoqueService,
         CheckOpService              $checkOpService
-    )
-    {
+    ) {
         $this->romaneioService      = $romaneioService;
         $this->estoqueService       = $estoqueService;
-        $this->checkOpService       = $checkOpService;    
+        $this->checkOpService       = $checkOpService;
     }
 
     /**
@@ -51,15 +50,14 @@ class RomaneioController extends AbstractController
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
-        if($stmt->rowCount() > 0)
-        {
+        if ($stmt->rowCount() > 0) {
             $romaneio = $stmt->fetchAll();
-        }else {
+        } else {
             $romaneio = "Nenhum Romaneio Cadastrado";
         }
 
         return $this->json(
-           $romaneio
+            $romaneio
         );
     }
 
@@ -71,8 +69,7 @@ class RomaneioController extends AbstractController
         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
         $romaneio = $this->romaneioService->getRomaneio($op);
 
-        if($romaneio === null || $romaneio === "")
-        {
+        if ($romaneio === null || $romaneio === "") {
             return $this->responseNotOK("Nenhum romaneio corresponde a O.P.", false);
         }
 
@@ -91,10 +88,9 @@ class RomaneioController extends AbstractController
         $sql = $conn->prepare($sql);
         $sql->execute();
 
-        if($sql->rowCount() > 0)
-        {
+        if ($sql->rowCount() > 0) {
             $romaneio = $sql->fetchAll();
-        }else {
+        } else {
             $romaneio = "Nenhum Romaneio Corresponde a essa OP!";
         }
 
@@ -116,15 +112,13 @@ class RomaneioController extends AbstractController
      */
     public function checkOp($op): Response
     {
-        if($op === null || $op === "")
-        {
+        if ($op === null || $op === "") {
             return $this->responseNotOK("Campo obrigatório, op", false);
         }
 
         $response = $this->checkOpService->checkOp($op);
 
-        if($response === false || $response === "")
-        {
+        if ($response === false || $response === "") {
             return $this->json(false, 201, [], []);
         }
 
@@ -138,33 +132,68 @@ class RomaneioController extends AbstractController
     {
         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
 
-        if($op === null || $op === "")
-        {
+        if ($op === null || $op === "") {
             return $this->responseNotOK("Campo Obrigatorio, Ordem de Produção", false);
         }
 
         $romaneio = $this->estoqueService->checkOp($op);
 
-        if($romaneio === null || $romaneio === "")
-        {
+        if ($romaneio === null || $romaneio === "") {
             return $this->responseNotOK("Romaneio não cadastrado ou inexistente", false);
         }
 
         $grade = $this->estoqueService->getGrade($op);
-        if($grade === null || $grade === "")
-        {
+        if ($grade === null || $grade === "") {
             return $this->responseNotOK("Grade não cadastrado ou inexistente", false);
         }
 
         $seq_operacional = $this->estoqueService->getSequencia($op);
-        if($seq_operacional === null || $seq_operacional === "")
-        {
+        if ($seq_operacional === null || $seq_operacional === "") {
             return $this->responseNotOK("Sequencia Operacional não cadastrado ou inexistente", false);
         }
 
         $footer = $this->estoqueService->getFooter($op);
-        if($footer === null || $footer === "")
-        {
+        if ($footer === null || $footer === "") {
+            return $this->responseNotOK("Romaneio Footer não cadastrado ou inexistente", false);
+        }
+
+        return $this->json([
+            "romaneio"                  => $romaneio,
+            "grade"                     => $grade,
+            "sequencia_operacional"     => $seq_operacional,
+            "footer"                    => $footer
+        ], 200, [], $context);
+    }
+
+     /**
+     * @Route("/get-estoque/{op}", name="getRomaneio", methods={"GET"})
+     */
+    public function getEstoque($op)
+    {
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+
+        if ($op === null || $op === "") {
+            return $this->responseNotOK("Campo Obrigatorio, Ordem de Produção", false);
+        }
+
+        $romaneio = $this->estoqueService->checkOp($op);
+
+        if ($romaneio === null || $romaneio === "") {
+            return $this->responseNotOK("Romaneio não cadastrado ou inexistente", false);
+        }
+
+        $grade = $this->estoqueService->getGrade($op);
+        if ($grade === null || $grade === "") {
+            return $this->responseNotOK("Grade não cadastrado ou inexistente", false);
+        }
+
+        $seq_operacional = $this->estoqueService->getSequenciaAll($op);
+        if ($seq_operacional === null || $seq_operacional === "") {
+            return $this->responseNotOK("Sequencia Operacional não cadastrado ou inexistente", false);
+        }
+
+        $footer = $this->estoqueService->getFooter($op);
+        if ($footer === null || $footer === "") {
             return $this->responseNotOK("Romaneio Footer não cadastrado ou inexistente", false);
         }
 
@@ -179,7 +208,8 @@ class RomaneioController extends AbstractController
     /**
      * @Route("/reference-code", name="referenceCode", methods={"GET"})
      */
-    public function referenceCode(){
+    public function referenceCode()
+    {
 
         $reference_code = md5(uniqid(rand() . "", true));
 
@@ -194,24 +224,16 @@ class RomaneioController extends AbstractController
         $context['ignored_attributes'] = ['id', 'createdAt', 'deletedAt', 'updatedAt'];
 
         $json = file_get_contents('php://input');
-        $array = json_decode($json, TRUE );
+        $array = json_decode($json, TRUE);
 
         $doctrine = $this->getDoctrine();
-            
+
+        // var_dump($array['sequencia']); exit;
         $response = $this->romaneioService->save($array, $doctrine) ?? null;
-        if($response === null || $response === "")
-        {
+        if ($response === null || $response === "") {
             return $this->responseNotOK("Nenhum dado registrado correspondente!", false);
         }
 
-       foreach($array['sequencia'] as $item) {
-        $sequencia = $doctrine->getRepository(SequenciaOperacional::class)->findOneBy(["reference_code" => $item]);
-        $sequencia->setChecked(true);
-        $maneger = $doctrine->getManager();
-        $maneger->flush();
-       }
-    
-        
         return $this->json($response, 200, [], $context);
     }
 
@@ -219,45 +241,41 @@ class RomaneioController extends AbstractController
      * @Route("/get-romaneios-by-nfe/{nfe}", name="romaneioNfe", methods={"GET"})
      */
     public function romaneioNfe($nfe): Response
-    {  
-         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+    {
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
         $response = $this->romaneioService->getRomaneioByNfe($nfe) ?? null;
-        if($response === null || $response === "")
-        {
+        if ($response === null || $response === "") {
             return $this->responseNotOK("Nenhum romaneio cadastrado!", false);
         }
 
         return $this->json($response, 200, [], $context);
     }
 
-     /**
+    /**
      * @Route("/financeiro-finalizados-lista/{nfe}", name="financeiroRomaneioList", methods={"GET"})
      */
     public function financeiroRomaneioList($nfe): Response
-    {  
-         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+    {
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
         $response = $this->romaneioService->getFinanceiroRomaneioByNfe($nfe) ?? null;
-        if($response === null || $response === "")
-        {
+        if ($response === null || $response === "") {
             return $this->responseNotOK("Nenhum romaneio cadastrado!", false);
         }
 
         return $this->json($response, 200, [], $context);
     }
 
-     /**
+    /**
      * @Route("/list", name="list", methods={"GET"})
      */
     public function list()
-    {  
-         $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
+    {
+        $context['ignored_attributes'] = ['createdAt', 'deletedAt', 'updatedAt'];
         $response = $this->romaneioService->nfeList() ?? null;
-        if($response === null || $response === "")
-        {
+        if ($response === null || $response === "") {
             return $this->responseNotOK("Nenhum romaneio cadastrado!", false);
         }
 
         return $this->json($response, 200, [], $context);
     }
-    
 }

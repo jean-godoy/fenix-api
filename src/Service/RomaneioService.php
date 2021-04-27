@@ -61,6 +61,7 @@ class RomaneioService
     }
 
     /**
+     * Salva os dados do faccao_romaneio
      * @return Response[]
      */
     public function save($array, $doctrine)
@@ -77,21 +78,17 @@ class RomaneioService
         $romaneio->setUpdatedAt($data_now);
         $romaneio->setFaccaoStatus(6);
         $romaneio->setValorFaccao($this->money->toUsd($array['valor_faccao']));
+        $romaneio->setGradeQuantidade(\strval($array['grade_quantidade']));
+        $romaneio->setPrevisaoEntrega(new \DateTime($array['previsao_entrega'], new \DateTimeZone('America/Sao_Paulo')));
 
         $this->em->persist($romaneio);
         $this->em->flush();
 
         $conn = $this->em->getConnection();
-        $conn->beginTransaction();
-        foreach ($array['sequencia'] as $seq) {
-            $sql = "UPDATE sequencia_operacional SET checked = true WHERE reference_code = '$seq' ";
-        }
-        $sql = $conn->prepare($sql);
-        $sql->execute();
 
         for ($i = 1; $i <= count($array['sequencia']); $i++) {
 
-            $sql = "UPDATE sequencia_operacional SET checked = true WHERE reference_code = '{$array['sequencia'][$i]}'";
+            $sql = "UPDATE sequencia_operacional SET checked = false WHERE reference_code = '{$array['sequencia'][$i]}'";
             $sql = $conn->prepare($sql);
             $sql->execute();
         }

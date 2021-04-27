@@ -87,6 +87,16 @@ class FaccaoRomaneio
      */
     private $finalizado;
 
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    private $grade_quantidade;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $previsao_entrega;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -264,6 +274,30 @@ class FaccaoRomaneio
     public function setFinalizado(?\DateTimeInterface $finalizado): self
     {
         $this->finalizado = $finalizado;
+
+        return $this;
+    }
+
+    public function getGradeQuantidade(): ?string
+    {
+        return $this->grade_quantidade;
+    }
+
+    public function setGradeQuantidade(string $grade_quantidade): self
+    {
+        $this->grade_quantidade = $grade_quantidade;
+
+        return $this;
+    }
+
+    public function getPrevisaoEntrega(): ?\DateTimeInterface
+    {
+        return $this->previsao_entrega;
+    }
+
+    public function setPrevisaoEntrega(\DateTimeInterface $previsao_entrega): self
+    {
+        $this->previsao_entrega = $previsao_entrega;
 
         return $this;
     }

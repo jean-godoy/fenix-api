@@ -90,6 +90,18 @@ use App\Repository\RomaneioFooterRepository;
         }
     }
 
+    public function getSequenciaAll($op)
+    {
+        $sequencia = $this->sequenciaRepository->findBy(["ordemProducao" => $op]);
+
+        if($sequencia !== null || $sequencia !== "")
+        {
+            return $sequencia;
+        } else {
+            return [];
+        }
+    }
+
     public function getFooter($op)
     {
         $footer = $this->footerRepository->findOneBy(["ordem_producao" => $op]);
