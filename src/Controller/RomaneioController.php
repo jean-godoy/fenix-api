@@ -166,7 +166,7 @@ class RomaneioController extends AbstractController
     }
 
      /**
-     * @Route("/get-estoque/{op}", name="getRomaneio", methods={"GET"})
+     * @Route("/get-estoque/{op}", name="getEstoque", methods={"GET"})
      */
     public function getEstoque($op)
     {
