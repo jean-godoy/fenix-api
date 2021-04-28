@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Repository\RomaneioDescricaoRepository;
-use App\Entity\FaccaoRomaneio;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SequenciaGradesRepository;
 use App\Service\MoneyService;
-use App\Entity\SequenciaOperacional;
+
+use App\Repository\RomaneioDescricaoRepository;
 use App\Repository\SequenciaOperacionalRepository;
+use App\Repository\SequenciaGradesRepository;
+use App\Repository\RomaneioFooterRepository;
+use App\Repository\FaccaoRomaneioRepository;
+
+use App\Entity\FaccaoRomaneio;
+use App\Entity\SequenciaOperacional;
+use Exception;
+
+
 
 /**
  * Class RomaneioDescricao
@@ -191,5 +198,44 @@ class RomaneioService
         }
 
         return [];
+    }
+
+    /**
+     * Deleta tudo referente ao romaneio
+     * @param ordem_producao
+     * @return Response[]
+     */
+    public function delete($op)
+    {
+        try {
+            $conn = $this->em->getConnection();
+            $sql = "DELETE faccao_romaneio.*,
+                            romaneio_descricao.*,
+                            romaneio_footer.*,
+                            sequencia_grades.*,
+                            sequencia_operacional.*
+                    FROM faccao_romaneio, 
+                        romaneio_descricao, 
+                        romaneio_footer, 
+                        sequencia_grades, 
+                        sequencia_operacional
+                    WHERE faccao_romaneio.ordem_producao = romaneio_descricao.ordem_producao 
+                    AND romaneio_footer.ordem_producao = romaneio_descricao.ordem_producao 
+                    AND sequencia_grades.op = romaneio_descricao.ordem_producao 
+                    AND sequencia_operacional.ordem_producao = romaneio_descricao.ordem_producao 
+                    AND romaneio_descricao.ordem_producao = '$op' ";
+
+            $sql = $conn->prepare($sql);
+            $sql->execute();
+            
+            if ($sql->rowCount() > 0) {
+                return true;
+            }
+
+            return [];
+
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

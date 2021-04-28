@@ -278,4 +278,23 @@ class RomaneioController extends AbstractController
 
         return $this->json($response, 200, [], $context);
     }
+
+    /**
+     * @Route("/delete/{ordem_producao}", name="deleteOp", methods={"DELETE"})
+     * 
+     * Deleta todoas arquivos referenciados pela ordem de produção
+     * 
+     * @param ordem_produca
+     * @return string
+     */
+    public function deleteOp($ordem_producao): Response {
+
+        if($ordem_producao === null || $ordem_producao === "") {
+            return $this->responseNotOK('Parametro obrigatório, ordem_producao', false);
+        }
+
+        $response = $this->romaneioService->delete($ordem_producao);
+
+        return $this->json($response, 200, [], []);
+    }
 }
