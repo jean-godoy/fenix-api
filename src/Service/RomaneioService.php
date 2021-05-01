@@ -86,7 +86,7 @@ class RomaneioService
         $romaneio->setFaccaoStatus(6);
         $romaneio->setValorFaccao($this->money->toUsd($array['valor_faccao']));
         $romaneio->setGradeQuantidade(\strval($array['grade_quantidade']));
-        $romaneio->setPrevisaoEntrega(new \DateTime($array['previsao_entrega'], new \DateTimeZone('America/Sao_Paulo')));
+        // $romaneio->setPrevisaoEntrega(new \DateTime($array['previsao_entrega'], new \DateTimeZone('America/Sao_Paulo')));
 
         $this->em->persist($romaneio);
         $this->em->flush();

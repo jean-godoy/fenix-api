@@ -176,4 +176,14 @@ use Symfony\Component\VarDumper\Cloner\Data;
         return true;
     }
 
+    /**
+     * Cria a folha de pagamento assim que o romaneio 
+     * é finalizado
+     * @return []
+     */
+    private function createPayroll()
+    {
+
+    }
+
  }

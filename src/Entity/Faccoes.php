@@ -53,11 +53,6 @@ class Faccoes
     private $updated_at;
 
     /**
-     * @ORM\Column(type="string", length=20)
-     */
-    private $bank;
-
-    /**
      * @ORM\Column(type="string", length=32)
      */
     private $faccao_code;
@@ -66,6 +61,21 @@ class Faccoes
      * @ORM\Column(type="string", length=32)
      */
     private $user_code;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $cidade;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $bairro;
+
+    /**
+     * @ORM\Column(type="string", length=32)
+     */
+    private $numero;
 
     public function getId(): ?int
     {
@@ -156,18 +166,6 @@ class Faccoes
         return $this;
     }
 
-    public function getBank(): ?string
-    {
-        return $this->bank;
-    }
-
-    public function setBank(string $bank): self
-    {
-        $this->bank = $bank;
-
-        return $this;
-    }
-
     public function getFaccaoCode(): ?string
     {
         return $this->faccao_code;
@@ -192,4 +190,63 @@ class Faccoes
         return $this;
     }
 
+    /**
+     * Get the value of cidade
+     */ 
+    public function getCidade()
+    {
+        return $this->cidade;
+    }
+
+    /**
+     * Set the value of cidade
+     *
+     * @return  self
+     */ 
+    public function setCidade($cidade)
+    {
+        $this->cidade = $cidade;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of bairro
+     */ 
+    public function getBairro()
+    {
+        return $this->bairro;
+    }
+
+    /**
+     * Set the value of bairro
+     *
+     * @return  self
+     */ 
+    public function setBairro($bairro)
+    {
+        $this->bairro = $bairro;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of numero
+     */ 
+    public function getNumero()
+    {
+        return $this->numero;
+    }
+
+    /**
+     * Set the value of numero
+     *
+     * @return  self
+     */ 
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
 }

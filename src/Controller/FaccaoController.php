@@ -76,9 +76,11 @@ class FaccaoController extends AbstractController
         $faccao = new Faccoes();
         $faccao->setFaccaoName($data['faccao_name']);
         $faccao->setPhone($data['phone']);
+        $faccao->setCidade($data['cidade']);
+        $faccao->setBairro($data['bairro']);
         $faccao->setStreet($data['street']);
+        $faccao->setNumero($data['numero']);
         $faccao->setCpf($data['cpf']);
-        $faccao->setBank($data['bank']);
         $faccao->setEmployees(intval($data['employees']));
         $faccao->setUserCode($user_code);
         $faccao->setFaccaoCode($faccao_code);

@@ -93,7 +93,7 @@ class FaccaoRomaneio
     private $grade_quantidade;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $previsao_entrega;
 
@@ -295,7 +295,7 @@ class FaccaoRomaneio
         return $this->previsao_entrega;
     }
 
-    public function setPrevisaoEntrega(\DateTimeInterface $previsao_entrega): self
+    public function setPrevisaoEntrega(?\DateTimeInterface $previsao_entrega): self
     {
         $this->previsao_entrega = $previsao_entrega;
 
