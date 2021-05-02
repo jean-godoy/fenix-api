@@ -16,8 +16,7 @@ use App\Repository\FaccaoRomaneioRepository;
 use App\Entity\FaccaoRomaneio;
 use App\Entity\SequenciaOperacional;
 use Exception;
-
-
+use PhpParser\Node\Stmt\Foreach_;
 
 /**
  * Class RomaneioDescricao
@@ -86,16 +85,23 @@ class RomaneioService
         $romaneio->setFaccaoStatus(6);
         $romaneio->setValorFaccao($this->money->toUsd($array['valor_faccao']));
         $romaneio->setGradeQuantidade(\strval($array['grade_quantidade']));
-        // $romaneio->setPrevisaoEntrega(new \DateTime($array['previsao_entrega'], new \DateTimeZone('America/Sao_Paulo')));
+        $romaneio->setPrevisaoEntrega(new \DateTime($array['previsao_entrega'], new \DateTimeZone('America/Sao_Paulo')));
 
         $this->em->persist($romaneio);
         $this->em->flush();
 
         $conn = $this->em->getConnection();
 
-        for ($i = 1; $i <= count($array['sequencia']); $i++) {
+        //seta todas grades selecionadas
+        foreach ($array['grade'] as $key => $value) {
+            $sql = "UPDATE sequencia_grades SET checked = true WHERE grade_code = '{$value}'";
+            $sql = $conn->prepare($sql);
+            $sql->execute();
+        }
 
-            $sql = "UPDATE sequencia_operacional SET checked = false WHERE reference_code = '{$array['sequencia'][$i]}'";
+        //seta todas sequencias operacionais selecionadas
+        foreach ($array['sequencia'] as $key => $value) {
+            $sql = "UPDATE sequencia_operacional SET checked = true WHERE reference_code = '{$value}'";
             $sql = $conn->prepare($sql);
             $sql->execute();
         }
@@ -227,13 +233,12 @@ class RomaneioService
 
             $sql = $conn->prepare($sql);
             $sql->execute();
-            
+
             if ($sql->rowCount() > 0) {
                 return true;
             }
 
             return [];
-
         } catch (Exception $e) {
             return false;
         }

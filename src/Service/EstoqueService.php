@@ -68,7 +68,7 @@ use App\Repository\RomaneioFooterRepository;
 
     public function getGrade($op)
     {
-        $grade = $this->gradeRepository->findBy(["op" => $op]);
+        $grade = $this->gradeRepository->findBy(["op" => $op, "checked" => null]);
 
         if($grade !== null || $grade !== "")
         {

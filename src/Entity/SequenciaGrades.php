@@ -57,6 +57,11 @@ class SequenciaGrades
      */
     private $grade_code;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $checked;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -154,6 +159,18 @@ class SequenciaGrades
     public function setGradeCode(string $grade_code): self
     {
         $this->grade_code = $grade_code;
+
+        return $this;
+    }
+
+    public function getChecked(): ?bool
+    {
+        return $this->checked;
+    }
+
+    public function setChecked(?bool $checked): self
+    {
+        $this->checked = $checked;
 
         return $this;
     }
