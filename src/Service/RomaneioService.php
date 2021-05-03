@@ -211,34 +211,32 @@ class RomaneioService
      * @param ordem_producao
      * @return Response[]
      */
-    public function delete($op)
+    public function delete($ordem_producao)
     {
         try {
             $conn = $this->em->getConnection();
-            $sql = "DELETE faccao_romaneio.*,
-                            romaneio_descricao.*,
-                            romaneio_footer.*,
-                            sequencia_grades.*,
-                            sequencia_operacional.*
-                    FROM faccao_romaneio, 
-                        romaneio_descricao, 
-                        romaneio_footer, 
-                        sequencia_grades, 
-                        sequencia_operacional
-                    WHERE faccao_romaneio.ordem_producao = romaneio_descricao.ordem_producao 
-                    AND romaneio_footer.ordem_producao = romaneio_descricao.ordem_producao 
-                    AND sequencia_grades.op = romaneio_descricao.ordem_producao 
-                    AND sequencia_operacional.ordem_producao = romaneio_descricao.ordem_producao 
-                    AND romaneio_descricao.ordem_producao = '$op' ";
 
+            $sql = "DELETE FROM romaneio_descricao WHERE ordem_producao = $ordem_producao";
             $sql = $conn->prepare($sql);
             $sql->execute();
 
-            if ($sql->rowCount() > 0) {
-                return true;
-            }
+            $sql = "DELETE FROM romaneio_footer WHERE ordem_producao = $ordem_producao";
+            $sql = $conn->prepare($sql);
+            $sql->execute();
 
-            return [];
+            $sql = "DELETE FROM sequencia_operacional WHERE ordem_producao = $ordem_producao";
+            $sql = $conn->prepare($sql);
+            $sql->execute();
+
+            $sql = "DELETE FROM faccao_romaneio WHERE ordem_producao = $ordem_producao";
+            $sql = $conn->prepare($sql);
+            $sql->execute();
+
+            $sql = "DELETE FROM sequencia_grades WHERE op = $ordem_producao";
+            $sql = $conn->prepare($sql);
+            $sql->execute();
+
+            return true;
         } catch (Exception $e) {
             return false;
         }

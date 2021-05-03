@@ -125,7 +125,7 @@ use Symfony\Component\VarDumper\Cloner\Data;
 
     public function setStatus($data)
     {
-        $romaneio = $this->faccaoRepository->findOneBy(["romaneio_code" => $data['romaneio_code']]) ?? null;
+        $romaneio = $this->faccaoRepository->findOneBy(["romaneio_code" => $data['romaneio_code'], "faccao_code" => $data['faccao_code']]) ?? null;
 
         if($romaneio === null || $romaneio == "")
         {
