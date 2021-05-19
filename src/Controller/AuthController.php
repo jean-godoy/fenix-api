@@ -40,13 +40,17 @@ class AuthController extends AbstractController
         $conn = $manager->getConnection();
 
         $json = file_get_contents('php://input');
+        if($json === null || $json === "" || is_array($json)){
+            return $this->responseNotOK('Objeto JSON obrigatóiro, user_name, user_pass', false);
+        }
         $data = json_decode($json, true);
 
-        // $users = $this->getDoctrine()->getRepository(Users::class)->findBy(['user_email' => $data['user_email']]);
+        // $users = $this->getDoctrine()->getRepository(Users::class)->findOneBy(['user_email' => $data['user_name'], 'user_pass' => $data['user_pass']]);
+        // print_r($users); exit;
 
-        $sql = "SELECT * FROM users WHERE user_name = :user_name AND user_pass = :user_pass";
+        $sql = "SELECT * FROM users WHERE user_email = :user_email AND user_pass = :user_pass";
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':user_name', $data['user_name']);
+        $stmt->bindValue(':user_email', $data['user_name']);
         $stmt->bindValue(':user_pass', $data['user_pass']);
 
         $stmt->execute();
@@ -54,10 +58,6 @@ class AuthController extends AbstractController
         if ($stmt->rowCount() > 0) {
             $user = $stmt->fetch();
         }
-
-        // if(count($users) > 0){
-        //     throw new BadRequestHttpException('User not found', null, 404);
-        // }
 
         return $this->json(
             $user
