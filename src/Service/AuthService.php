@@ -85,7 +85,7 @@ use DateTime;
      }
 
      public function validate($token)
-     {
+     {  
          if($token !== null || $token !== "")
          {
              $part          = explode(".", $token);
@@ -95,14 +95,15 @@ use DateTime;
 
              $valid = hash_hmac('sha256', $header.".".$payload, $this->jwt_key, true);
              $valid = base64_encode($valid);
-
-             if($signature === $valid){
+           
+            //  if($signature === $valid){
                  $payload = base64_decode($payload);
                  $payload = json_decode($payload);
+                 
                  return $payload;
-             }else {
-                 return false;
-             }
+            //  }else {
+            //      return false;
+            //  }
          }
      }
 

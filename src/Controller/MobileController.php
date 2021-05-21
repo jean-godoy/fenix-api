@@ -39,11 +39,13 @@ class MobileController extends AbstractController
         {
             return $this->responseNotOK("Autorização obrigatoria, token", false);
         }
-
+       
         $part = explode(" ", $token);
-        $token_data = $this->authService->validate($part[1]);
-        $user_email = $this->authService->validate($part[1])->user_email;
+        $tkn = $part[1];
+        $token_data = $this->authService->validate($tkn) ?? null;
         
+        $user_email = $this->authService->validate($part[1])->user_email;
+       
         $faccao_code = $this->mobileService->faccaoCode($user_email);
         
         if ($faccao_code === null) {
