@@ -43,7 +43,7 @@ use Doctrine\ORM\EntityManagerInterface;
     public function faccaoCode($email)
     {   
         $conn = $this->em->getConnection();
-
+        $faccao_code = null;
         $user_code = $this->usersRepository->findOneBy(["user_email" => $email])->getUserCode();
 
         $sql = "SELECT * FROM faccoes WHERE user_code = '$user_code'";
@@ -55,7 +55,7 @@ use Doctrine\ORM\EntityManagerInterface;
             $faccao_code = $data['faccao_code'];
         }
         
-        if($faccao_code == NULL) {
+        if($faccao_code == null) {
             return null;
         }
 

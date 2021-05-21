@@ -46,7 +46,7 @@ class MobileController extends AbstractController
         
         $user_email = $this->authService->validate($part[1])->user_email;
        
-        $faccao_code = $this->mobileService->faccaoCode($user_email);
+        $faccao_code = $this->mobileService->faccaoCode($user_email) ?? null;
         
         if ($faccao_code === null) {
             $faccao_code = "inDrive";
