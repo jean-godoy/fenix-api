@@ -10,6 +10,7 @@ use App\Repository\RomaneioDescricaoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\SequenciaOperacionalRepository;
 use App\Repository\SequenciaGradesRepository;
+use App\Entity\Payroll;
 use DateTime;
 use Symfony\Component\VarDumper\Cloner\Data;
 
@@ -146,6 +147,7 @@ class FaccaoRomaneioService
          */
         if ($data['status'] == 9) {
             $romaneio->setFinalizado(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+            $pay = $this->createPayroll($data['romaneio_code']);
         }
 
         $this->em->persist($romaneio);
@@ -173,13 +175,16 @@ class FaccaoRomaneioService
     /**
      * Cria a folha de pagamento assim que o romaneio 
      * é finalizado
+     * @param string $romaneio_code
+     * 
      * @return []
      */
-    private function createPayroll(string $faccao_code, string $op)
+    private function createPayroll(string $romaneio_code)
     {   
+        $data = [];
         $conn = $this->em->getConnection();
 
-        $sql = "SELECT faccoes.faccao_name, romaneio.referencia AS REF, 
+        $sql = "SELECT faccao.faccao_code, faccoes.faccao_name, romaneio.referencia AS REF, faccao.ordem_producao as OP, 
                 romaneio.descricao_servico, faccao.grade_quantidade AS quantidade, 
                 faccao.finalizado, faccao.valor_faccao, faccao.grade_quantidade * faccao.valor_faccao as total
                 FROM faccao_romaneio as faccao
@@ -187,11 +192,36 @@ class FaccaoRomaneioService
                 ON romaneio.ordem_producao = faccao.ordem_producao
                 LEFT JOIN faccoes
                 ON faccao.faccao_code = faccoes.faccao_code
-                WHERE faccao.faccao_code = $faccao_code
-                AND romaneio.ordem_producao = $op";
+                WHERE faccao.romaneio_code = '$romaneio_code'
+                AND romaneio.ordem_producao = faccao.ordem_producao";
         
         $sql = $conn->prepare($sql);
         $sql->execute();
+
+        if ($sql->rowCount() > 0) {
+            $data = $sql->fetch();
+        }
+
+        if($data) {
+            $payroll = new Payroll();
+            $payroll->setOrdemProducao(intval($data['OP']));
+            $payroll->setFaccaoNome($data['faccao_name']);
+            $payroll->setRef(intval($data['REF']));
+            $payroll->setDescServico($data['descricao_servico']);
+            $payroll->setDataEntrega(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+            $payroll->setPreco($data['valor_faccao']);
+            $payroll->setQuantidade(intval($data['quantidade']));
+            $payroll->setValorTotal($data['total']);
+            $payroll->setStatusPagamento(0);
+            $payroll->setFaccaoCode($data['faccao_code']);
+            $payroll->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+            $payroll->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+            $this->em->persist($payroll);
+            $this->em->flush();
+        }
+
+        print_r($data); exit;
 
     }
 }
