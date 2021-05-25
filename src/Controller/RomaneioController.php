@@ -253,6 +253,10 @@ class RomaneioController extends AbstractController
 
     /**
      * @Route("/financeiro-finalizados-lista/{nfe}", name="financeiroRomaneioList", methods={"GET"})
+     * Retorna lista de payrolls referente a nfe
+     * 
+     * @param number $nfe
+     * @return JSON{}
      */
     public function financeiroRomaneioList($nfe): Response
     {

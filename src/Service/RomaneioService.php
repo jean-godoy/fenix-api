@@ -12,6 +12,7 @@ use App\Repository\SequenciaOperacionalRepository;
 use App\Repository\SequenciaGradesRepository;
 use App\Repository\RomaneioFooterRepository;
 use App\Repository\FaccaoRomaneioRepository;
+use App\Repository\PayrollRepository;
 
 use App\Entity\FaccaoRomaneio;
 use App\Entity\SequenciaOperacional;
@@ -37,19 +38,22 @@ class RomaneioService
     private $em;
     private $money;
     private $sequenciaOperacional;
+    protected $payrollRepository;
 
     public function __construct(
         RomaneioDescricaoRepository     $romaneioDescricaoRepository,
         EntityManagerInterface          $em,
         SequenciaGradesRepository       $sequenciaGradesRepository,
         MoneyService                    $moneyService,
-        SequenciaOperacionalRepository  $sequenciaOperacionalRepository
+        SequenciaOperacionalRepository  $sequenciaOperacionalRepository,
+        PayrollRepository               $payrollRepository
     ) {
         $this->romaneioRepository       = $romaneioDescricaoRepository;
         $this->em                       = $em;
         $this->gradeRepository          = $sequenciaGradesRepository;
         $this->money                    = $moneyService;
         $this->sequenciaOperacional     = $sequenciaOperacionalRepository;
+        $this->payrollRepository        = $payrollRepository;
     }
 
     /**
@@ -165,26 +169,29 @@ class RomaneioService
      */
     public function getFinanceiroRomaneioByNfe($nfe)
     {
-        $conn = $this->em->getConnection();
+        $res = $this->payrollRepository->findBy(["nfe" => $nfe]);
+        // $conn = $this->em->getConnection();
 
-        $sql = "SELECT * FROM romaneio_descricao AS romaneio
-                LEFT JOIN faccao_romaneio AS faccao
-                ON romaneio.ordem_producao = faccao.ordem_producao
-                LEFT JOIN faccoes
-                ON faccao.faccao_code = faccoes.faccao_code
-                WHERE romaneio.num_nfe = $nfe
-                AND faccao.faccao_status >= 11
-            ";
+        // $sql = "SELECT * FROM romaneio_descricao AS romaneio
+        //         LEFT JOIN faccao_romaneio AS faccao
+        //         ON romaneio.ordem_producao = faccao.ordem_producao
+        //         LEFT JOIN faccoes
+        //         ON faccao.faccao_code = faccoes.faccao_code
+        //         WHERE romaneio.num_nfe = $nfe
+        //         AND faccao.faccao_status >= 11
+        //     ";
 
-        $sql = $conn->prepare($sql);
-        $sql->execute();
+        // $sql = $conn->prepare($sql);
+        // $sql->execute();
 
-        if ($sql->rowCount() > 0) {
-            $response = $sql->fetchAll();
-            return $response;
-        } else {
-            return [];
-        }
+        // if ($sql->rowCount() > 0) {
+        //     $response = $sql->fetchAll();
+        //     return $response;
+        // } else {
+        //     return [];
+        // }
+
+        return $res;
     }
 
     /**
