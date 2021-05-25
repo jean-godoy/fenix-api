@@ -184,7 +184,7 @@ class FaccaoRomaneioService
         $data = [];
         $conn = $this->em->getConnection();
 
-        $sql = "SELECT faccao.faccao_code, faccoes.faccao_name, romaneio.referencia AS REF, faccao.ordem_producao as OP, 
+        $sql = "SELECT faccao.faccao_code, faccoes.faccao_name, romaneio.referencia AS REF,romaneio.num_nfe AS NFE, faccao.ordem_producao as OP, 
                 romaneio.descricao_servico, faccao.grade_quantidade AS quantidade, 
                 faccao.finalizado, faccao.valor_faccao, faccao.grade_quantidade * faccao.valor_faccao as total
                 FROM faccao_romaneio as faccao
@@ -204,6 +204,7 @@ class FaccaoRomaneioService
 
         if($data) {
             $payroll = new Payroll();
+            $payroll->setNfe($data['NFE']);
             $payroll->setOrdemProducao(intval($data['OP']));
             $payroll->setFaccaoNome($data['faccao_name']);
             $payroll->setRef(intval($data['REF']));

@@ -87,6 +87,11 @@ class Payroll
      */
     private $deleted_at;
 
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    private $nfe;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -256,6 +261,18 @@ class Payroll
     public function setDeletedAt(?\DateTimeInterface $deleted_at): self
     {
         $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    public function getNfe(): ?string
+    {
+        return $this->nfe;
+    }
+
+    public function setNfe(string $nfe): self
+    {
+        $this->nfe = $nfe;
 
         return $this;
     }
