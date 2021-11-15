@@ -32,6 +32,9 @@ use Doctrine\ORM\EntityManagerInterface;
         $this->em               = $entityManagerInterface;
     }
 
+    /**
+     * Atualiza o status atual da facção.
+     */
     public function save($sequencia, $status)
     {  
        $service = new Status();

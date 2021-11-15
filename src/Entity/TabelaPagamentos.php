@@ -18,6 +18,11 @@ class TabelaPagamentos
     private $id;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $month;
+
+    /**
      * @ORM\Column(type="date")
      */
     private $data_entrega;
@@ -30,6 +35,18 @@ class TabelaPagamentos
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getMonth(): ?int
+    {
+        return $this->month;
+    }
+
+    public function setMonth(int $month): self
+    {
+        $this->month = $month;
+
+        return $this;
     }
 
     public function getDataEntrega(): ?\DateTimeInterface

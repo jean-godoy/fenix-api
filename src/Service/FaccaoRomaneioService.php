@@ -15,7 +15,7 @@ use DateTime;
 use Symfony\Component\VarDumper\Cloner\Data;
 
 /**
- * Class FaccaoRomaneioService
+ * Class FaccaoRomaneioService.
  * @package App\Entity
  * @author Jean Godoy
  * @link https://seidesistemas.com.br
@@ -120,6 +120,9 @@ class FaccaoRomaneioService
         }
     }
 
+    /**
+     * função responsavel por setar e alterar o status de um OP.
+     */
     public function setStatus($data)
     {
         $romaneio = $this->faccaoRepository->findOneBy(["romaneio_code" => $data['romaneio_code'], "faccao_code" => $data['faccao_code']]) ?? null;
@@ -134,8 +137,8 @@ class FaccaoRomaneioService
         $romaneio->setStatusUpdated(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
         /**
-         * Caso status seja igual a 7,
-         * seta a data de inicio
+         * Caso status seja igual a 7
+         * seta a data de inicio.
          */
         if ($data['status'] == 7) {
             $romaneio->setIniciado(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
@@ -143,7 +146,7 @@ class FaccaoRomaneioService
 
         /**
          * Caso status seja igual a 9,
-         * seta data de finalização
+         * seta data de finalização e gera a folha de pagamento.
          */
         if ($data['status'] == 9) {
             $romaneio->setFinalizado(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
@@ -174,7 +177,7 @@ class FaccaoRomaneioService
 
     /**
      * Cria a folha de pagamento assim que o romaneio 
-     * é finalizado
+     * é finalizado.
      * @param string $romaneio_code
      * 
      * @return []
@@ -186,7 +189,7 @@ class FaccaoRomaneioService
 
         $sql = "SELECT faccao.faccao_code, faccoes.faccao_name, romaneio.referencia AS REF,romaneio.num_nfe AS NFE, faccao.ordem_producao as OP, 
                 romaneio.descricao_servico, faccao.grade_quantidade AS quantidade, 
-                faccao.finalizado, faccao.valor_faccao, faccao.grade_quantidade * faccao.valor_faccao as total
+                faccao.finalizado, faccao.valor_faccao, (faccao.grade_quantidade * faccao.valor_faccao) as total
                 FROM faccao_romaneio as faccao
                 LEFT JOIN romaneio_descricao as romaneio 
                 ON romaneio.ordem_producao = faccao.ordem_producao
@@ -201,7 +204,8 @@ class FaccaoRomaneioService
         if ($sql->rowCount() > 0) {
             $data = $sql->fetch();
         }
-
+        
+        //Pega os dados do retorno e seta a folha de pagamento dos funcionários.
         if($data) {
             $payroll = new Payroll();
             $payroll->setNfe($data['NFE']);

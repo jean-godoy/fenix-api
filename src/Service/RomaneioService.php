@@ -19,6 +19,8 @@ use App\Entity\SequenciaOperacional;
 use Exception;
 use PhpParser\Node\Stmt\Foreach_;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Class RomaneioDescricao
  * @package App\Entity
@@ -40,13 +42,16 @@ class RomaneioService
     private $sequenciaOperacional;
     protected $payrollRepository;
 
+     private $logger;
+
     public function __construct(
         RomaneioDescricaoRepository     $romaneioDescricaoRepository,
         EntityManagerInterface          $em,
         SequenciaGradesRepository       $sequenciaGradesRepository,
         MoneyService                    $moneyService,
         SequenciaOperacionalRepository  $sequenciaOperacionalRepository,
-        PayrollRepository               $payrollRepository
+        PayrollRepository               $payrollRepository,
+        LoggerInterface $logger
     ) {
         $this->romaneioRepository       = $romaneioDescricaoRepository;
         $this->em                       = $em;
@@ -54,6 +59,8 @@ class RomaneioService
         $this->money                    = $moneyService;
         $this->sequenciaOperacional     = $sequenciaOperacionalRepository;
         $this->payrollRepository        = $payrollRepository;
+
+        $this->logger = $logger;
     }
 
     /**
@@ -91,6 +98,8 @@ class RomaneioService
         $romaneio->setGradeQuantidade(\strval($array['grade_quantidade']));
         $romaneio->setPrevisaoEntrega(new \DateTime($array['previsao_entrega'], new \DateTimeZone('America/Sao_Paulo')));
 
+        $this->logger->info('I love Tony Vairelles\' hairdresser.');
+       
         $this->em->persist($romaneio);
         $this->em->flush();
 
@@ -111,7 +120,7 @@ class RomaneioService
         }
 
 
-        return true;
+        // return true;
     }
 
     /**
