@@ -113,4 +113,27 @@ class UserController extends AbstractController
             'data' => 'Usuario deletado com sucesso!'
         ]);
     }
+
+    /**
+     * @Route("/create-admin", name="createAdmin", methods={"GET"})
+     */
+    public function createAdmin()
+    {
+        $user = new Users();
+        $user->setUserName("Admin");
+        $user->setUserEmail("admin@fenix.com");
+        $user->setUserPass("12345");
+        $user->setRoles(1);
+        $user->setUserCode(md5(uniqid(rand() . "", true)));
+        $user->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+        $user->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+        $doctrine = $this->getDoctrine()->getManager();
+        $doctrine->persist($user);
+        $doctrine->flush();
+
+        return $this->json([
+            'data' => 'Admin criado com sucesso!'
+        ]);
+    }
 }

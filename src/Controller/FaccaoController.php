@@ -97,7 +97,7 @@ class FaccaoController extends AbstractController
     }
 
     /**
-     * @Route("/update/{id}", name="update", methods={"PUT", " PATCH"})
+     * @Route("/update/{id}", name="update", methods={"PATCH"})
      */
     public function update($id)
     {
@@ -110,11 +110,15 @@ class FaccaoController extends AbstractController
 
         $faccao->setFaccaoName($data['faccao_name']);
         $faccao->setPhone($data['phone']);
-        $faccao->setStreet($data['street']);
         $faccao->setCpf($data['cpf']);
-        $faccao->setBank($data['bank']);
-        $faccao->setEmployees($data['employees']);
+        $faccao->setCidade($data['cidade']);
+        $faccao->setBairro($data['bairro']);
+        $faccao->setStreet($data['street']);
+        $faccao->setNumero($data['numero']);
+        $faccao->setEmployees(intval($data['employees']));
         $faccao->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+        // var_dump($faccao); die();
 
         $manager = $doctrine->getManager();
         $manager->flush();
